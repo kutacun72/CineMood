@@ -1,0 +1,36 @@
+name: cinemood
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  go_router: ^17.0.0
+  http: ^1.6.0
+  youtube_player_flutter: ^9.1.3
+  carousel_slider: ^5.1.1
+  firebase_core: ^4.2.1
+  firebase_auth: ^6.1.2
+  cloud_firestore: ^6.1.0
+  video_player: ^2.10.1
+  intl: ^0.20.2
+  cached_network_image: ^3.3.1
+  youtube_player_iframe: ^6.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  
+  # Arka plan resmi eklendi:
+  assets:
+    - assets/intro.mp4
+    - assets/bg1.jfif

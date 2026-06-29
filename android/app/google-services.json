@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "696999362975",
+    "project_id": "cinemood-f7d53",
+    "storage_bucket": "cinemood-f7d53.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696999362975:android:16fa9c0557cc9e775efdaa",
+        "android_client_info": {
+          "package_name": "com.rw.cinemood"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi3Mtb1S1zsUT3xbOYUKrzShY88ijGK5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
