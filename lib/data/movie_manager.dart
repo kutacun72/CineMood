@@ -148,6 +148,7 @@ class MovieManager extends ChangeNotifier {
   final List<Movie> _trendingMovies = [];
 
   final List<Movie> _favoriteMovies = [];
+  final List<Movie> _watchedMovies = [];
   final List<Person> _favoriteActors = [];
   final List<Person> _favoriteDirectors = [];
   List<Movie> _appTopRatedMovies = [];
@@ -165,6 +166,7 @@ class MovieManager extends ChangeNotifier {
   List<dynamic> get searchResults => _searchResults;
   List<Movie> get trendingMovies => _trendingMovies;
   List<Movie> get favoriteMovies => _favoriteMovies;
+  List<Movie> get watchedMovies => _watchedMovies;
   List<Person> get favoriteActors => _favoriteActors;
   List<Person> get favoriteDirectors => _favoriteDirectors;
   List<Movie> get appTopRatedMovies => _appTopRatedMovies;
@@ -172,6 +174,8 @@ class MovieManager extends ChangeNotifier {
 
   bool isFavorite(Movie movie) =>
       _favoriteMovies.any((fav) => fav.id == movie.id);
+  bool isWatched(Movie movie) =>
+      _watchedMovies.any((w) => w.id == movie.id);
   bool isPersonFavorite(Person person) {
     if (person.knownFor == 'Directing') {
       return _favoriteDirectors.any((p) => p.id == person.id);
@@ -312,6 +316,17 @@ class MovieManager extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> toggleWatched(Movie movie) async {
+    if (isWatched(movie)) {
+      _watchedMovies.removeWhere((m) => m.id == movie.id);
+      await _socialService.updateWatchedMovie(movie, false);
+    } else {
+      _watchedMovies.add(movie);
+      await _socialService.updateWatchedMovie(movie, true);
+    }
+    notifyListeners();
+  }
+
   Future<void> togglePersonFavorite(Person person) async {
     bool isDirector = person.knownFor == 'Directing';
     List<Person> targetList = isDirector ? _favoriteDirectors : _favoriteActors;
@@ -340,6 +355,14 @@ class MovieManager extends ChangeNotifier {
         final list = data['favorites'] as List? ?? [];
         for (var item in list) {
           _favoriteMovies.add(Movie.fromMap(item));
+        }
+      }
+
+      if (data.containsKey('watched_movies')) {
+        _watchedMovies.clear();
+        final list = data['watched_movies'] as List? ?? [];
+        for (var item in list) {
+          _watchedMovies.add(Movie.fromMap(item));
         }
       }
 

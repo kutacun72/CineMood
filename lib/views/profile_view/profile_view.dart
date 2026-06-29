@@ -310,47 +310,60 @@ class ProfileView extends StatelessWidget {
                     children: [
                       _buildStatCard(
                         context: context,
+                        label: "Watched",
+                        count: MovieManager.instance.watchedMovies.length
+                            .toString(),
+                        icon: Icons.visibility,
+                        onTap: () => context.push(AppRouters.watchStats),
+                      ),
+                      _buildStatCard(
+                        context: context,
                         label: "Favorites",
                         count: favCount.toString(),
                         icon: Icons.favorite,
                         onTap: () => context.go(AppRouters.favorites),
                       ),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: MovieManager.instance.getUserListsStream(),
-                        builder: (context, snapshot) {
-                          final count = snapshot.hasData
-                              ? snapshot.data!.docs.length
-                              : 0;
-                          return _buildStatCard(
-                            context: context,
-                            label: "Lists",
-                            count: count.toString(),
-                            icon: Icons.list,
-                            onTap: () => context.push(AppRouters.userLists),
-                          );
-                        },
+                      Expanded(
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: MovieManager.instance.getUserListsStream(),
+                          builder: (context, snapshot) {
+                            final count = snapshot.hasData
+                                ? snapshot.data!.docs.length
+                                : 0;
+                            return _buildStatCard(
+                              context: context,
+                              label: "Lists",
+                              count: count.toString(),
+                              icon: Icons.list,
+                              onTap: () => context.push(AppRouters.userLists),
+                            );
+                          },
+                        ),
                       ),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('reviews')
-                            .where(
-                              'user_id',
-                              isEqualTo:
-                                  FirebaseAuth.instance.currentUser?.uid ?? '',
-                            )
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          final count = snapshot.hasData
-                              ? snapshot.data!.docs.length
-                              : 0;
-                          return _buildStatCard(
-                            context: context,
-                            label: "Reviews",
-                            count: count.toString(),
-                            icon: Icons.comment,
-                            onTap: () => context.push(AppRouters.userReviews),
-                          );
-                        },
+                      Expanded(
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('reviews')
+                              .where(
+                                'user_id',
+                                isEqualTo:
+                                    FirebaseAuth.instance.currentUser?.uid ??
+                                        '',
+                              )
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            final count = snapshot.hasData
+                                ? snapshot.data!.docs.length
+                                : 0;
+                            return _buildStatCard(
+                              context: context,
+                              label: "Reviews",
+                              count: count.toString(),
+                              icon: Icons.comment,
+                              onTap: () => context.push(AppRouters.userReviews),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -581,43 +594,47 @@ class ProfileView extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-        decoration: BoxDecoration(
-          color: AppTheme.surfaceDark,
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: AppTheme.textColor.withValues(alpha: 0.1)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: AppTheme.primaryBlue, size: 24),
-            const SizedBox(height: 8),
-            Text(
-              count,
-              style: TextStyle(
-                color: AppTheme.textColor,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+        onTap: onTap,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceDark,
+            borderRadius: BorderRadius.circular(15),
+            border:
+                Border.all(color: AppTheme.textColor.withValues(alpha: 0.1)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
-            ),
-            Text(
-              label,
-              style: TextStyle(
-                color: AppTheme.textColor.withValues(alpha: 0.6),
-                fontSize: 12,
+            ],
+          ),
+          child: Column(
+            children: [
+              Icon(icon, color: AppTheme.primaryBlue, size: 22),
+              const SizedBox(height: 8),
+              Text(
+                count,
+                style: TextStyle(
+                  color: AppTheme.textColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppTheme.textColor.withValues(alpha: 0.6),
+                  fontSize: 11,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
     );
   }
 

@@ -618,6 +618,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
         animation: MovieManager.instance,
         builder: (context, child) {
           final isFav = MovieManager.instance.isFavorite(widget.movie);
+          final isWatched = MovieManager.instance.isWatched(widget.movie);
 
           return CustomScrollView(
             slivers: [
@@ -630,6 +631,29 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                   onPressed: () => context.pop(),
                 ),
                 actions: [
+                  IconButton(
+                    tooltip: isWatched ? "Watched" : "Mark as watched",
+                    icon: Icon(
+                      isWatched
+                          ? Icons.visibility
+                          : Icons.visibility_outlined,
+                      color: isWatched ? AppTheme.primaryBlue : Colors.white,
+                      size: 28,
+                    ),
+                    onPressed: () {
+                      MovieManager.instance.toggleWatched(widget.movie);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            isWatched
+                                ? "Removed from watched"
+                                : "Marked as watched",
+                          ),
+                          duration: const Duration(milliseconds: 900),
+                        ),
+                      );
+                    },
+                  ),
                   IconButton(
                     icon: Icon(
                       isFav ? Icons.favorite : Icons.favorite_border,

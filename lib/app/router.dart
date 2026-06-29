@@ -26,6 +26,7 @@ import 'package:cinemood/views/profile_view/chat_view.dart';
 import 'package:cinemood/views/profile_view/user_lists_view.dart';
 import 'package:cinemood/views/profile_view/user_list_detail_view.dart';
 import 'package:cinemood/views/profile_view/user_reviews_view.dart';
+import 'package:cinemood/views/profile_view/watch_stats_view.dart';
 import 'package:cinemood/views/profile_view/admin_panel_view.dart'; // Admin Panel importu
 import 'package:cinemood/app/groups_view.dart';
 import 'package:cinemood/app/group_chat_view.dart';
@@ -52,6 +53,7 @@ class AppRouters {
   static const String userLists = '/user-lists';
   static const String userListDetail = '/user-list-detail';
   static const String userReviews = '/user-reviews';
+  static const String watchStats = '/watch-stats';
   static const String groups = '/groups';
   static const String groupChat = '/group-chat';
 
@@ -147,6 +149,11 @@ final router = GoRouter(
       path: AppRouters.userReviews,
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const UserReviewsView(),
+    ),
+    GoRoute(
+      path: AppRouters.watchStats,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const WatchStatsView(),
     ),
     GoRoute(
       path: AppRouters.userListDetail,

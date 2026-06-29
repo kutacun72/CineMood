@@ -129,6 +129,24 @@ class SocialService {
     }
   }
 
+  Future<void> updateWatchedMovie(Movie movie, bool isAdding) async {
+    if (currentUid == null) return;
+    if (isAdding) {
+      await _firestore.collection('users').doc(currentUid).update({
+        'watched_movies': FieldValue.arrayUnion([movie.toMap()]),
+      });
+      await logUserActivity(
+        "${movie.title} marked as watched.",
+        movie.id,
+        'watched',
+      );
+    } else {
+      await _firestore.collection('users').doc(currentUid).update({
+        'watched_movies': FieldValue.arrayRemove([movie.toMap()]),
+      });
+    }
+  }
+
   Future<void> updateFavoritePerson(Person person, bool isAdding) async {
     if (currentUid == null) return;
     bool isDirector = person.knownFor == 'Directing';
