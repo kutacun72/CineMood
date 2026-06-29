@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
+import 'package:cinemood/app/widgets/spoiler_widgets.dart';
 import 'package:cinemood/data/movie_manager.dart';
 import 'package:cinemood/models/movie_model.dart';
 import 'package:cinemood/services/social_service.dart';
@@ -26,6 +27,7 @@ class _ChatViewState extends State<ChatView> {
   Map<String, dynamic>? _attachedList;
   Movie? _attachedMovie;
   Map<String, dynamic>? _replyToMessage;
+  bool _isSpoiler = false;
 
   late String chatId;
   late String myUid;
@@ -81,16 +83,19 @@ class _ChatViewState extends State<ChatView> {
     Map<String, dynamic>? listData = _attachedList;
 
     final replyData = _replyToMessage;
+    final spoiler = _isSpoiler;
 
     setState(() {
       _attachedList = null;
       _attachedMovie = null;
       _replyToMessage = null;
+      _isSpoiler = false;
     });
 
     final msgData = {
       'sender_id': myUid,
       'text': text,
+      'is_spoiler': spoiler,
       'timestamp': FieldValue.serverTimestamp(),
       'seen': false,
     };
@@ -365,32 +370,45 @@ class _ChatViewState extends State<ChatView> {
             ),
 
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(10, 6, 10, 10),
             color: AppTheme.backgroundBlack,
-            child: Row(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.attach_file, color: Colors.grey),
-                  onPressed: _showAttachmentMenu,
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _msgController,
-                    style: TextStyle(color: AppTheme.textColor),
-                    decoration: InputDecoration(
-                      hintText: "Message...",
-                      filled: true,
-                      fillColor: AppTheme.surfaceDark,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SpoilerToggle(
+                    value: _isSpoiler,
+                    onChanged: (v) => setState(() => _isSpoiler = v),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.send, color: Colors.blue),
-                  onPressed: _sendMessage,
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.attach_file, color: Colors.grey),
+                      onPressed: _showAttachmentMenu,
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _msgController,
+                        style: TextStyle(color: AppTheme.textColor),
+                        decoration: InputDecoration(
+                          hintText: "Message...",
+                          filled: true,
+                          fillColor: AppTheme.surfaceDark,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.send, color: Colors.blue),
+                      onPressed: _sendMessage,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -468,8 +486,9 @@ class _ChatViewState extends State<ChatView> {
               if (msg['text'] != null && msg['text'].toString().isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    msg['text'],
+                  child: SpoilerText(
+                    text: msg['text'],
+                    isSpoiler: msg['is_spoiler'] == true,
                     style: TextStyle(color: textColor, fontSize: 16),
                   ),
                 ),

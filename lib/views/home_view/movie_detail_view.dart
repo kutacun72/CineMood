@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
+import 'package:cinemood/app/widgets/spoiler_widgets.dart';
 import 'package:cinemood/data/movie_manager.dart';
 import 'package:cinemood/views/home_view/widgets/web_trailer_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -491,6 +492,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
   void _showRatingDialog() {
     final TextEditingController reviewController = TextEditingController();
     double rating = 5.0;
+    bool isSpoiler = false;
     showDialog(
       context: context,
       builder: (context) {
@@ -538,6 +540,14 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                         fillColor: Colors.black26,
                       ),
                     ),
+                    const SizedBox(height: 12),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SpoilerToggle(
+                        value: isSpoiler,
+                        onChanged: (v) => setState(() => isSpoiler = v),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -557,6 +567,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                       widget.movie,
                       rating,
                       reviewController.text.trim(),
+                      isSpoiler: isSpoiler,
                     );
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -1203,33 +1214,50 @@ class _ReviewCardState extends State<ReviewCard> {
 
   void _replyToReview() {
     final TextEditingController replyController = TextEditingController();
+    bool isSpoiler = false;
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surfaceDark,
-        title: Text("Reply", style: TextStyle(color: AppTheme.textColor)),
-        content: TextField(
-          controller: replyController,
-          style: TextStyle(color: AppTheme.textColor),
-          decoration: const InputDecoration(hintText: "Your answer..."),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          backgroundColor: AppTheme.surfaceDark,
+          title: Text("Reply", style: TextStyle(color: AppTheme.textColor)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: replyController,
+                style: TextStyle(color: AppTheme.textColor),
+                decoration: const InputDecoration(hintText: "Your answer..."),
+              ),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SpoilerToggle(
+                  value: isSpoiler,
+                  onChanged: (v) => setDialogState(() => isSpoiler = v),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await MovieManager.instance.replyToReview(
+                  widget.doc.id,
+                  replyController.text.trim(),
+                  isSpoiler: isSpoiler,
+                );
+                if (mounted) Navigator.pop(ctx);
+                setState(() => showReplies = true);
+              },
+              child: const Text("Share"),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await MovieManager.instance.replyToReview(
-                widget.doc.id,
-                replyController.text.trim(),
-              );
-              if (mounted) Navigator.pop(ctx);
-              setState(() => showReplies = true);
-            },
-            child: const Text("Share"),
-          ),
-        ],
       ),
     );
   }
@@ -1358,8 +1386,42 @@ class _ReviewCardState extends State<ReviewCard> {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              data['comment'] ?? '',
+            if (data['is_spoiler'] == true) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: AppTheme.accentPink,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 6),
+                    Text(
+                      "SPOILER",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 6),
+            ],
+            SpoilerText(
+              text: data['comment'] ?? '',
+              isSpoiler: data['is_spoiler'] == true,
               style: TextStyle(color: AppTheme.textColor),
             ),
             if (data['is_edited'] == true)
@@ -1447,8 +1509,9 @@ class _ReviewCardState extends State<ReviewCard> {
                                   fontSize: 12,
                                 ),
                               ),
-                              Text(
-                                rData['text'] ?? '',
+                              SpoilerText(
+                                text: rData['text'] ?? '',
+                                isSpoiler: rData['is_spoiler'] == true,
                                 style: TextStyle(
                                   color: AppTheme.textColor.withValues(
                                     alpha: 0.8,

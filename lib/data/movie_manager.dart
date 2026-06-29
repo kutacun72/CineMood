@@ -450,8 +450,18 @@ class MovieManager extends ChangeNotifier {
   Stream<QuerySnapshot> getRepliesStream(String id) =>
       _socialService.getRepliesStream(id);
 
-  Future<void> addReview(Movie movie, double rating, String comment) async {
-    await _socialService.addReview(movie, rating, comment);
+  Future<void> addReview(
+    Movie movie,
+    double rating,
+    String comment, {
+    bool isSpoiler = false,
+  }) async {
+    await _socialService.addReview(
+      movie,
+      rating,
+      comment,
+      isSpoiler: isSpoiler,
+    );
     fetchAppTopRatedMovies();
   }
 
@@ -464,8 +474,8 @@ class MovieManager extends ChangeNotifier {
       await _socialService.editReview(id, c);
   Future<void> toggleLikeReview(String id) async =>
       await _socialService.toggleLikeReview(id);
-  Future<void> replyToReview(String id, String t) async =>
-      await _socialService.replyToReview(id, t);
+  Future<void> replyToReview(String id, String t, {bool isSpoiler = false}) async =>
+      await _socialService.replyToReview(id, t, isSpoiler: isSpoiler);
 
   Future<void> fetchAppTopRatedMovies() async {
     _appTopRatedMovies = await _socialService.fetchAppTopRatedMovies();
@@ -548,6 +558,7 @@ class MovieManager extends ChangeNotifier {
     Map<String, dynamic>? sharedMovie,
     Map<String, dynamic>? sharedList,
     Map<String, dynamic>? replyTo,
+    bool isSpoiler = false,
   }) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -556,6 +567,7 @@ class MovieManager extends ChangeNotifier {
       'sender_id': user.uid,
       'sender_email': user.email,
       'text': text,
+      'is_spoiler': isSpoiler,
       'created_at': FieldValue.serverTimestamp(),
       'likes': [],
       'seen_by': [],

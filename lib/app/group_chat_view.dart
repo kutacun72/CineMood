@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
+import 'package:cinemood/app/widgets/spoiler_widgets.dart';
 import 'package:cinemood/data/movie_manager.dart';
 import 'package:cinemood/models/movie_model.dart';
 
@@ -36,6 +37,7 @@ class _GroupChatViewState extends State<GroupChatView> {
 
   Movie? _draftMovie;
   Map<String, dynamic>? _replyToMessage;
+  bool _isSpoiler = false;
 
   @override
   void initState() {
@@ -61,10 +63,12 @@ class _GroupChatViewState extends State<GroupChatView> {
         : null;
 
     final replyData = _replyToMessage;
+    final spoiler = _isSpoiler;
 
     setState(() {
       _draftMovie = null;
       _replyToMessage = null;
+      _isSpoiler = false;
     });
 
     await MovieManager.instance.sendGroupMessage(
@@ -72,6 +76,7 @@ class _GroupChatViewState extends State<GroupChatView> {
       text,
       sharedMovie: movieToSend,
       replyTo: replyData,
+      isSpoiler: spoiler,
     );
 
     _scrollDown();
@@ -856,9 +861,20 @@ class _GroupChatViewState extends State<GroupChatView> {
                 ),
 
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.fromLTRB(10, 6, 10, 10),
                 color: AppTheme.backgroundBlack,
-                child: Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SpoilerToggle(
+                        value: _isSpoiler,
+                        onChanged: (v) => setState(() => _isSpoiler = v),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
                   children: [
                     IconButton(
                       icon: const Icon(Icons.attach_file, color: Colors.grey),
@@ -887,6 +903,8 @@ class _GroupChatViewState extends State<GroupChatView> {
                       icon: const Icon(Icons.send, color: Colors.blue),
                       onPressed: _sendMessage,
                     ),
+                  ],
+                ),
                   ],
                 ),
               ),
@@ -1130,8 +1148,9 @@ class _GroupChatViewState extends State<GroupChatView> {
 
                     if (msg['text'] != null &&
                         msg['text'].toString().isNotEmpty)
-                      Text(
-                        msg['text'],
+                      SpoilerText(
+                        text: msg['text'],
+                        isSpoiler: msg['is_spoiler'] == true,
                         style: TextStyle(color: textColor, fontSize: 16),
                       ),
                   ],

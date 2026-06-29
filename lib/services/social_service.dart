@@ -351,6 +351,7 @@ class SocialService {
     String text, {
     Movie? sharedMovie,
     Map<String, dynamic>? sharedList,
+    bool isSpoiler = false,
   }) async {
     if (currentUid == null) return;
 
@@ -360,6 +361,7 @@ class SocialService {
       Map<String, dynamic> msgData = {
         'sender_id': currentUid,
         'text': text,
+        'is_spoiler': isSpoiler,
         'timestamp': FieldValue.serverTimestamp(),
         'is_read': false,
       };
@@ -474,7 +476,12 @@ class SocialService {
       .orderBy('timestamp')
       .snapshots();
 
-  Future<void> addReview(Movie movie, double rating, String comment) async {
+  Future<void> addReview(
+    Movie movie,
+    double rating,
+    String comment, {
+    bool isSpoiler = false,
+  }) async {
     if (currentUid == null) return;
 
     final userDoc = await _firestore.collection('users').doc(currentUid).get();
@@ -520,6 +527,7 @@ class SocialService {
       'profile_icon_id': iconId,
       'rating': rating,
       'comment': comment,
+      'is_spoiler': isSpoiler,
       'likes': [],
       'timestamp': FieldValue.serverTimestamp(),
     });
@@ -624,7 +632,11 @@ class SocialService {
     }
   }
 
-  Future<void> replyToReview(String id, String text) async {
+  Future<void> replyToReview(
+    String id,
+    String text, {
+    bool isSpoiler = false,
+  }) async {
     if (currentUid == null) return;
     final parent = await _firestore.collection('reviews').doc(id).get();
     final userName = currentEmail?.split('@')[0];
@@ -632,6 +644,7 @@ class SocialService {
       'user_id': currentUid,
       'user_name': userName,
       'text': text,
+      'is_spoiler': isSpoiler,
       'timestamp': FieldValue.serverTimestamp(),
     });
 
