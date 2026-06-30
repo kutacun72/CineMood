@@ -33,6 +33,15 @@ class BadgeInfo {
 
   /// 0.0 - 1.0 arasi ilerleme orani.
   double get fraction => goal == 0 ? 0 : (progress / goal).clamp(0.0, 1.0);
+
+  /// Sohbette paylasmak icin rozeti basit bir map'e cevirir.
+  Map<String, dynamic> toShareMap() => {
+        'badge_id': id,
+        'badge_title': title,
+        'badge_desc': description,
+        'badge_icon': icon.codePoint,
+        'badge_color': color.toARGB32(),
+      };
 }
 
 class BadgeService {

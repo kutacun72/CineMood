@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
+import 'package:cinemood/app/widgets/badge_widget.dart';
 import 'package:cinemood/app/widgets/spoiler_widgets.dart';
 import 'package:cinemood/data/movie_manager.dart';
 import 'package:cinemood/models/movie_model.dart';
@@ -26,6 +27,7 @@ class _ChatViewState extends State<ChatView> {
 
   Map<String, dynamic>? _attachedList;
   Movie? _attachedMovie;
+  Map<String, dynamic>? _attachedBadge;
   Map<String, dynamic>? _replyToMessage;
   bool _isSpoiler = false;
 
@@ -49,6 +51,10 @@ class _ChatViewState extends State<ChatView> {
     if (widget.extras.containsKey('sharedMovie')) {
       _attachedMovie = widget.extras['sharedMovie'] as Movie;
     }
+    if (widget.extras.containsKey('sharedBadge')) {
+      _attachedBadge =
+          Map<String, dynamic>.from(widget.extras['sharedBadge']);
+    }
 
     MovieManager.instance.enterChat(targetUid);
   }
@@ -64,7 +70,12 @@ class _ChatViewState extends State<ChatView> {
   void _sendMessage() async {
     final text = _msgController.text.trim();
 
-    if (text.isEmpty && _attachedList == null && _attachedMovie == null) return;
+    if (text.isEmpty &&
+        _attachedList == null &&
+        _attachedMovie == null &&
+        _attachedBadge == null) {
+      return;
+    }
 
     _msgController.clear();
 
@@ -81,6 +92,7 @@ class _ChatViewState extends State<ChatView> {
     }
 
     Map<String, dynamic>? listData = _attachedList;
+    final badgeData = _attachedBadge;
 
     final replyData = _replyToMessage;
     final spoiler = _isSpoiler;
@@ -88,11 +100,12 @@ class _ChatViewState extends State<ChatView> {
     setState(() {
       _attachedList = null;
       _attachedMovie = null;
+      _attachedBadge = null;
       _replyToMessage = null;
       _isSpoiler = false;
     });
 
-    final msgData = {
+    final Map<String, dynamic> msgData = {
       'sender_id': myUid,
       'text': text,
       'is_spoiler': spoiler,
@@ -104,6 +117,10 @@ class _ChatViewState extends State<ChatView> {
       msgData['movie_id'] = movieData['id'];
       msgData['movie_title'] = movieData['title'];
       msgData['poster_path'] = movieData['poster_path'];
+    }
+
+    if (badgeData != null) {
+      msgData.addAll(badgeData);
     }
 
     if (listData != null) {
@@ -330,7 +347,8 @@ class _ChatViewState extends State<ChatView> {
 
           if (_replyToMessage != null ||
               _attachedMovie != null ||
-              _attachedList != null)
+              _attachedList != null ||
+              _attachedBadge != null)
             Container(
               padding: const EdgeInsets.all(8),
               color: AppTheme.surfaceDark,
@@ -357,12 +375,33 @@ class _ChatViewState extends State<ChatView> {
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ),
+                  if (_attachedBadge != null)
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.emoji_events_rounded,
+                            color: Colors.amber,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              "Badge: ${_attachedBadge!['badge_title']}",
+                              style: const TextStyle(color: Colors.grey),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.red),
                     onPressed: () => setState(() {
                       _replyToMessage = null;
                       _attachedMovie = null;
                       _attachedList = null;
+                      _attachedBadge = null;
                     }),
                   ),
                 ],
@@ -482,6 +521,7 @@ class _ChatViewState extends State<ChatView> {
                 _buildClickableListCard(msg, isMe, textColor),
               if (msg['movie_id'] != null)
                 _buildClickableMovieCard(msg, isMe, textColor),
+              if (msg['badge_id'] != null) SharedBadgeCard(data: msg),
 
               if (msg['text'] != null && msg['text'].toString().isNotEmpty)
                 Padding(

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
+import 'package:cinemood/app/widgets/badge_widget.dart';
 import 'package:cinemood/app/widgets/spoiler_widgets.dart';
 import 'package:cinemood/data/movie_manager.dart';
 import 'package:cinemood/models/movie_model.dart';
@@ -17,6 +18,7 @@ class GroupChatView extends StatefulWidget {
   final bool isCreator;
   final String? groupIconUrl;
   final Movie? sharedMovie;
+  final Map<String, dynamic>? sharedBadge;
 
   const GroupChatView({
     super.key,
@@ -25,6 +27,7 @@ class GroupChatView extends StatefulWidget {
     required this.isCreator,
     this.groupIconUrl,
     this.sharedMovie,
+    this.sharedBadge,
   });
 
   @override
@@ -36,6 +39,7 @@ class _GroupChatViewState extends State<GroupChatView> {
   final ScrollController _scrollController = ScrollController();
 
   Movie? _draftMovie;
+  Map<String, dynamic>? _draftBadge;
   Map<String, dynamic>? _replyToMessage;
   bool _isSpoiler = false;
 
@@ -46,11 +50,14 @@ class _GroupChatViewState extends State<GroupChatView> {
     if (widget.sharedMovie != null) {
       _draftMovie = widget.sharedMovie;
     }
+    if (widget.sharedBadge != null) {
+      _draftBadge = Map<String, dynamic>.from(widget.sharedBadge!);
+    }
   }
 
   void _sendMessage() async {
     final text = _msgController.text.trim();
-    if (text.isEmpty && _draftMovie == null) return;
+    if (text.isEmpty && _draftMovie == null && _draftBadge == null) return;
 
     _msgController.clear();
 
@@ -64,9 +71,11 @@ class _GroupChatViewState extends State<GroupChatView> {
 
     final replyData = _replyToMessage;
     final spoiler = _isSpoiler;
+    final badge = _draftBadge;
 
     setState(() {
       _draftMovie = null;
+      _draftBadge = null;
       _replyToMessage = null;
       _isSpoiler = false;
     });
@@ -77,6 +86,7 @@ class _GroupChatViewState extends State<GroupChatView> {
       sharedMovie: movieToSend,
       replyTo: replyData,
       isSpoiler: spoiler,
+      sharedBadge: badge,
     );
 
     _scrollDown();
@@ -823,7 +833,9 @@ class _GroupChatViewState extends State<GroupChatView> {
                 ),
               ),
 
-              if (_replyToMessage != null || _draftMovie != null)
+              if (_replyToMessage != null ||
+                  _draftMovie != null ||
+                  _draftBadge != null)
                 Container(
                   padding: const EdgeInsets.all(8),
                   color: AppTheme.surfaceDark,
@@ -849,11 +861,26 @@ class _GroupChatViewState extends State<GroupChatView> {
                           ),
                         ),
                       ],
+                      if (_draftBadge != null) ...[
+                        const Icon(
+                          Icons.emoji_events_rounded,
+                          color: Colors.amber,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            "Badge: ${_draftBadge!['badge_title']}",
+                            style: const TextStyle(color: Colors.grey),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                       IconButton(
                         icon: const Icon(Icons.close, color: Colors.red),
                         onPressed: () => setState(() {
                           _replyToMessage = null;
                           _draftMovie = null;
+                          _draftBadge = null;
                         }),
                       ),
                     ],
@@ -1145,6 +1172,7 @@ class _GroupChatViewState extends State<GroupChatView> {
 
                     if (msg['list_id'] != null) _buildClickableListCard(msg),
                     if (msg['movie_id'] != null) _buildClickableMovieCard(msg),
+                    if (msg['badge_id'] != null) SharedBadgeCard(data: msg),
 
                     if (msg['text'] != null &&
                         msg['text'].toString().isNotEmpty)

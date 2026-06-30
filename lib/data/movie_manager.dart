@@ -640,6 +640,7 @@ class MovieManager extends ChangeNotifier {
     Map<String, dynamic>? sharedList,
     Map<String, dynamic>? replyTo,
     bool isSpoiler = false,
+    Map<String, dynamic>? sharedBadge,
   }) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -653,6 +654,10 @@ class MovieManager extends ChangeNotifier {
       'likes': [],
       'seen_by': [],
     };
+
+    if (sharedBadge != null) {
+      data.addAll(sharedBadge);
+    }
 
     if (sharedMovie != null) {
       data['movie_id'] = sharedMovie['id'];

@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/theme.dart';
 import 'package:cinemood/app/widgets/badge_widget.dart';
-import 'package:cinemood/app/widgets/empty_state.dart';
 import 'package:cinemood/data/badge_service.dart';
 import 'package:cinemood/data/movie_manager.dart';
 
@@ -35,15 +34,62 @@ class WatchStatsView extends StatelessWidget {
             ),
           ),
           body: watched.isEmpty
-              ? const EmptyState(
-                  icon: Icons.bar_chart_rounded,
-                  title: "No stats yet",
-                  message:
-                      "Mark movies as watched to build your viewing stats.",
-                )
+              ? _buildEmptyWithBadges(context)
               : _buildStats(context, watched),
         );
       },
+    );
+  }
+
+  // Hic izleme yokken: tesvik mesaji + hedef olarak (kilitli) rozetler.
+  Widget _buildEmptyWithBadges(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        const SizedBox(height: 20),
+        Center(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppTheme.primaryBlue.withValues(alpha: 0.12),
+              border: Border.all(
+                color: AppTheme.primaryBlue.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
+            ),
+            child: Icon(
+              Icons.emoji_events_rounded,
+              size: 44,
+              color: AppTheme.primaryBlue,
+            ),
+          ),
+        ),
+        const SizedBox(height: 18),
+        Text(
+          "Start your journey",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: AppTheme.textColor,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          "Mark movies as watched to unlock these badges and build your stats.",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: AppTheme.textColor.withValues(alpha: 0.6),
+            fontSize: 14,
+            height: 1.4,
+          ),
+        ),
+        const SizedBox(height: 32),
+        // watched bos -> tum rozetler kilitli (hedef) olarak gosterilir.
+        _buildBadges(const []),
+        const SizedBox(height: 40),
+      ],
     );
   }
 
