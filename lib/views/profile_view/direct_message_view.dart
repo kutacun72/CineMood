@@ -1,4 +1,4 @@
-// Dosya: lib/views/profile_view/chat_view.dart
+// Direct messaging and shared-list screen.
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,18 +10,17 @@ import 'package:cinemood/app/theme.dart';
 import 'package:cinemood/app/widgets/badge_widget.dart';
 import 'package:cinemood/app/widgets/spoiler_widgets.dart';
 import 'package:cinemood/data/movie_manager.dart';
-import 'package:cinemood/models/movie_model.dart';
 import 'package:cinemood/services/social_service.dart';
 
-class ChatView extends StatefulWidget {
+class DirectMessageView extends StatefulWidget {
   final Map<String, dynamic> extras;
-  const ChatView({super.key, required this.extras});
+  const DirectMessageView({super.key, required this.extras});
 
   @override
-  State<ChatView> createState() => _ChatViewState();
+  State<DirectMessageView> createState() => _DirectMessageViewState();
 }
 
-class _ChatViewState extends State<ChatView> {
+class _DirectMessageViewState extends State<DirectMessageView> {
   final TextEditingController _msgController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
@@ -52,8 +51,7 @@ class _ChatViewState extends State<ChatView> {
       _attachedMovie = widget.extras['sharedMovie'] as Movie;
     }
     if (widget.extras.containsKey('sharedBadge')) {
-      _attachedBadge =
-          Map<String, dynamic>.from(widget.extras['sharedBadge']);
+      _attachedBadge = Map<String, dynamic>.from(widget.extras['sharedBadge']);
     }
 
     MovieManager.instance.enterChat(targetUid);

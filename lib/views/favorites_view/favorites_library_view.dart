@@ -1,24 +1,22 @@
-// Dosya: lib/views/favorites_view/favorites_view.dart
+// Favorites library screen.
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
-import 'package:cinemood/app/widgets/empty_state.dart';
-import 'package:cinemood/app/widgets/shimmer_loading.dart';
 import 'package:cinemood/data/movie_manager.dart';
+import 'package:cinemood/views/favorites_view/widgets/favorite_collection_grid.dart';
 
-class FavoritesView extends StatefulWidget {
-  const FavoritesView({super.key});
+class FavoritesLibraryView extends StatefulWidget {
+  const FavoritesLibraryView({super.key});
 
   @override
-  State<FavoritesView> createState() => _FavoritesViewState();
+  State<FavoritesLibraryView> createState() => _FavoritesLibraryViewState();
 }
 
-class _FavoritesViewState extends State<FavoritesView>
+class _FavoritesLibraryViewState extends State<FavoritesLibraryView>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -285,116 +283,6 @@ class _FavoritesViewState extends State<FavoritesView>
     );
   }
 
-  Widget _buildMovieGrid(List<Movie> movies) {
-    if (movies.isEmpty) {
-      return const EmptyState(
-        icon: Icons.movie_outlined,
-        title: "No favorite movies yet",
-        message: "Tap the heart on a movie to see it here.",
-      );
-    }
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 0.6,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemCount: movies.length,
-      itemBuilder: (context, index) {
-        final movie = movies[index];
-        return GestureDetector(
-          onTap: () => context.push(AppRouters.movieDetail, extra: movie),
-          child: Column(
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: movie.poster,
-                    fit: BoxFit.cover,
-                    placeholder: (c, u) => Shimmer(
-                      child: Shimmer.box(borderRadius: BorderRadius.zero),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                movie.title,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppTheme.textColor,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildPersonGrid(List<Person> people) {
-    if (people.isEmpty) {
-      return const EmptyState(
-        icon: Icons.person_outline_rounded,
-        title: "No favorites here yet",
-        message: "Add actors or directors to build your list.",
-      );
-    }
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 0.75,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemCount: people.length,
-      itemBuilder: (context, index) {
-        final person = people[index];
-        return GestureDetector(
-          onTap: () => context.push(AppRouters.personDetail, extra: person),
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppTheme.primaryBlue.withValues(alpha: 0.3),
-                      width: 2,
-                    ),
-                    image: DecorationImage(
-                      image: NetworkImage(person.profilePath),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                person.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: AppTheme.textColor,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -466,9 +354,13 @@ class _FavoritesViewState extends State<FavoritesView>
             body: TabBarView(
               controller: _tabController,
               children: [
-                _buildMovieGrid(MovieManager.instance.favoriteMovies),
-                _buildPersonGrid(MovieManager.instance.favoriteActors),
-                _buildPersonGrid(MovieManager.instance.favoriteDirectors),
+                FavoriteMovieGrid(movies: MovieManager.instance.favoriteMovies),
+                FavoritePeopleGrid(
+                  people: MovieManager.instance.favoriteActors,
+                ),
+                FavoritePeopleGrid(
+                  people: MovieManager.instance.favoriteDirectors,
+                ),
               ],
             ),
           ),

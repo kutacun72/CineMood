@@ -32,14 +32,10 @@ class SpoilerToggle extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: value
-              ? active.withValues(alpha: 0.15)
-              : Colors.transparent,
+          color: value ? active.withValues(alpha: 0.15) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: value
-                ? active
-                : AppTheme.textColor.withValues(alpha: 0.3),
+            color: value ? active : AppTheme.textColor.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -55,8 +51,9 @@ class SpoilerToggle extends StatelessWidget {
             Text(
               "Spoiler",
               style: TextStyle(
-                color:
-                    value ? active : AppTheme.textColor.withValues(alpha: 0.6),
+                color: value
+                    ? active
+                    : AppTheme.textColor.withValues(alpha: 0.6),
                 fontSize: 13,
                 fontWeight: value ? FontWeight.bold : FontWeight.normal,
               ),
@@ -126,10 +123,7 @@ class _SpoilerTextState extends State<SpoilerText> {
           Positioned.fill(
             child: Container(
               color: AppTheme.accentPink.withValues(alpha: 0.10),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 4,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

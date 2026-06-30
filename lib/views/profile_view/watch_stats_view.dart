@@ -116,8 +116,7 @@ class WatchStatsView extends StatelessWidget {
 
     final avgRating = ratingCount > 0 ? ratingSum / ratingCount : 0.0;
 
-    final topRated = [...watched]
-      ..sort((a, b) => b.rating.compareTo(a.rating));
+    final topRated = [...watched]..sort((a, b) => b.rating.compareTo(a.rating));
 
     return ListView(
       padding: const EdgeInsets.all(20),
@@ -147,9 +146,7 @@ class WatchStatsView extends StatelessWidget {
         if (topGenres.isNotEmpty) ...[
           _sectionTitle("Top genres"),
           const SizedBox(height: 14),
-          ...topGenres.map(
-            (e) => _genreBar(e.key, e.value, maxGenre),
-          ),
+          ...topGenres.map((e) => _genreBar(e.key, e.value, maxGenre)),
           const SizedBox(height: 28),
         ],
 
@@ -212,13 +209,13 @@ class WatchStatsView extends StatelessWidget {
   }
 
   Widget _sectionTitle(String text) => Text(
-        text,
-        style: TextStyle(
-          color: AppTheme.textColor,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      );
+    text,
+    style: TextStyle(
+      color: AppTheme.textColor,
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+    ),
+  );
 
   Widget _buildBadges(List<Movie> watched) {
     final badges = BadgeService.computeBadges(
@@ -335,10 +332,7 @@ class WatchStatsView extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: Stack(
               children: [
-                Container(
-                  height: 10,
-                  color: AppTheme.surfaceDark,
-                ),
+                Container(height: 10, color: AppTheme.surfaceDark),
                 // Animasyonlu dolum
                 TweenAnimationBuilder<double>(
                   tween: Tween(begin: 0.0, end: fraction),
@@ -351,10 +345,7 @@ class WatchStatsView extends StatelessWidget {
                         height: 10,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [
-                              AppTheme.primaryBlue,
-                              AppTheme.accentPink,
-                            ],
+                            colors: [AppTheme.primaryBlue, AppTheme.accentPink],
                           ),
                           borderRadius: BorderRadius.circular(8),
                         ),

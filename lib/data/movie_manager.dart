@@ -174,8 +174,7 @@ class MovieManager extends ChangeNotifier {
 
   bool isFavorite(Movie movie) =>
       _favoriteMovies.any((fav) => fav.id == movie.id);
-  bool isWatched(Movie movie) =>
-      _watchedMovies.any((w) => w.id == movie.id);
+  bool isWatched(Movie movie) => _watchedMovies.any((w) => w.id == movie.id);
   bool isPersonFavorite(Person person) {
     if (person.knownFor == 'Directing') {
       return _favoriteDirectors.any((p) => p.id == person.id);
@@ -497,8 +496,11 @@ class MovieManager extends ChangeNotifier {
       await _socialService.editReview(id, c);
   Future<void> toggleLikeReview(String id) async =>
       await _socialService.toggleLikeReview(id);
-  Future<void> replyToReview(String id, String t, {bool isSpoiler = false}) async =>
-      await _socialService.replyToReview(id, t, isSpoiler: isSpoiler);
+  Future<void> replyToReview(
+    String id,
+    String t, {
+    bool isSpoiler = false,
+  }) async => await _socialService.replyToReview(id, t, isSpoiler: isSpoiler);
 
   Future<void> fetchAppTopRatedMovies() async {
     _appTopRatedMovies = await _socialService.fetchAppTopRatedMovies();

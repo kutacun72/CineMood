@@ -724,8 +724,10 @@ class SocialService {
     // kullanici bilgisini aktiviteye gomeriz (denormalizasyon).
     int iconId = 0;
     try {
-      final userDoc =
-          await _firestore.collection('users').doc(currentUid).get();
+      final userDoc = await _firestore
+          .collection('users')
+          .doc(currentUid)
+          .get();
       iconId = userDoc.data()?['profile_icon_id'] ?? 0;
     } catch (_) {}
 

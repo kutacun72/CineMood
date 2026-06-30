@@ -5,12 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
 import 'package:cinemood/app/widgets/badge_widget.dart';
 import 'package:cinemood/app/widgets/spoiler_widgets.dart';
 import 'package:cinemood/data/movie_manager.dart';
-import 'package:cinemood/models/movie_model.dart';
 
 class GroupChatView extends StatefulWidget {
   final String groupId;
@@ -902,36 +900,39 @@ class _GroupChatViewState extends State<GroupChatView> {
                     ),
                     const SizedBox(height: 6),
                     Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.attach_file, color: Colors.grey),
-                      onPressed: _showAttachmentMenu,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: _msgController,
-                        style: TextStyle(color: AppTheme.textColor),
-                        decoration: InputDecoration(
-                          hintText: "Message...",
-                          filled: true,
-                          fillColor: AppTheme.surfaceDark,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide.none,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.attach_file,
+                            color: Colors.grey,
                           ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
+                          onPressed: _showAttachmentMenu,
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _msgController,
+                            style: TextStyle(color: AppTheme.textColor),
+                            decoration: InputDecoration(
+                              hintText: "Message...",
+                              filled: true,
+                              fillColor: AppTheme.surfaceDark,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        IconButton(
+                          icon: const Icon(Icons.send, color: Colors.blue),
+                          onPressed: _sendMessage,
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.send, color: Colors.blue),
-                      onPressed: _sendMessage,
-                    ),
-                  ],
-                ),
                   ],
                 ),
               ),

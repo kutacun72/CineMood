@@ -11,23 +11,23 @@ import 'package:cinemood/views/login_view/welcome_screen.dart';
 import 'package:cinemood/views/home_view/home_view.dart';
 import 'package:cinemood/views/categories_view/categories_view.dart';
 import 'package:cinemood/views/categories_view/genre_movies_view.dart';
-import 'package:cinemood/views/favorites_view/favorites_view.dart';
+import 'package:cinemood/views/favorites_view/favorites_library_view.dart';
 import 'package:cinemood/views/recommended_view/recommended_view.dart';
 
 // Detay Sayfaları
-import 'package:cinemood/views/home_view/movie_detail_view.dart';
+import 'package:cinemood/views/home_view/movie_details_view.dart';
 import 'package:cinemood/views/home_view/personal_detail_view.dart';
 
 // Profil ve Sosyal Sayfalar
 import 'package:cinemood/views/profile_view/profile_view.dart';
 import 'package:cinemood/views/profile_view/friends_view.dart';
 import 'package:cinemood/views/profile_view/notifications_view.dart';
-import 'package:cinemood/views/profile_view/chat_view.dart';
+import 'package:cinemood/views/profile_view/direct_message_view.dart';
 import 'package:cinemood/views/profile_view/user_lists_view.dart';
-import 'package:cinemood/views/profile_view/user_list_detail_view.dart';
+import 'package:cinemood/views/profile_view/saved_list_details_view.dart';
 import 'package:cinemood/views/profile_view/user_reviews_view.dart';
 import 'package:cinemood/views/profile_view/watch_stats_view.dart';
-import 'package:cinemood/views/profile_view/admin_panel_view.dart'; // Admin Panel importu
+import 'package:cinemood/views/profile_view/moderation_dashboard_view.dart';
 import 'package:cinemood/app/groups_view.dart';
 import 'package:cinemood/app/group_chat_view.dart';
 
@@ -91,7 +91,7 @@ final router = GoRouter(
             body: Center(child: Text("Hata: Film verisi yok")),
           );
         }
-        return MovieDetailView(movie: state.extra as Movie);
+        return MovieDetailsView(movie: state.extra as Movie);
       },
     ),
     GoRoute(
@@ -137,7 +137,7 @@ final router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) {
         final extras = state.extra as Map<String, dynamic>? ?? {};
-        return ChatView(extras: extras);
+        return DirectMessageView(extras: extras);
       },
     ),
     GoRoute(
@@ -160,7 +160,7 @@ final router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) {
         final data = state.extra as Map<String, dynamic>;
-        return UserListDetailView(
+        return SavedListDetailsView(
           listId: data['listId'],
           listName: data['listName'],
           items: data['items'],
@@ -172,7 +172,7 @@ final router = GoRouter(
     GoRoute(
       path: AppRouters.adminPanel,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const AdminPanelView(),
+      builder: (context, state) => const ModerationDashboardView(),
     ),
 
     GoRoute(
@@ -235,7 +235,7 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: AppRouters.favorites,
-              builder: (context, state) => const FavoritesView(),
+              builder: (context, state) => const FavoritesLibraryView(),
             ),
           ],
         ),
@@ -256,8 +256,6 @@ final router = GoRouter(
   redirect: (context, state) {
     final user = FirebaseAuth.instance.currentUser;
     final isLoggingIn = state.uri.toString() == AppRouters.login;
-    final isWelcome = state.uri.toString() == AppRouters.welcome;
-
     if (user == null && !isLoggingIn) {
       return AppRouters.login;
     }

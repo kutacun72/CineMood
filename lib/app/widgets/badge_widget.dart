@@ -23,10 +23,7 @@ class SharedBadgeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final title = data['badge_title'] ?? 'Badge';
     final desc = data['badge_desc'] ?? '';
-    final iconData = IconData(
-      (data['badge_icon'] as num?)?.toInt() ?? Icons.emoji_events_rounded.codePoint,
-      fontFamily: 'MaterialIcons',
-    );
+    final iconData = BadgeService.sharedIconFrom(data['badge_icon']);
     final color = Color((data['badge_color'] as num?)?.toInt() ?? 0xFFFFC107);
 
     return Container(
@@ -89,10 +86,7 @@ class SharedBadgeCard extends StatelessWidget {
                 if (desc.toString().isNotEmpty)
                   Text(
                     desc,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 11,
-                    ),
+                    style: const TextStyle(color: Colors.white70, fontSize: 11),
                   ),
               ],
             ),
@@ -110,7 +104,9 @@ class BadgeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unlocked = badge.unlocked;
-    final color = unlocked ? badge.color : AppTheme.textColor.withValues(alpha: 0.3);
+    final color = unlocked
+        ? badge.color
+        : AppTheme.textColor.withValues(alpha: 0.3);
 
     return GestureDetector(
       onTap: () => _showDetail(context),
@@ -167,8 +163,7 @@ class BadgeTile extends StatelessWidget {
                   value: badge.fraction,
                   minHeight: 4,
                   backgroundColor: AppTheme.textColor.withValues(alpha: 0.1),
-                  valueColor:
-                      AlwaysStoppedAnimation(AppTheme.primaryBlue),
+                  valueColor: AlwaysStoppedAnimation(AppTheme.primaryBlue),
                 ),
               ),
             ),
@@ -236,8 +231,10 @@ class BadgeTile extends StatelessWidget {
               const SizedBox(height: 16),
               if (unlocked) ...[
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
@@ -268,7 +265,11 @@ class BadgeTile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    icon: const Icon(Icons.share, color: Colors.white, size: 18),
+                    icon: const Icon(
+                      Icons.share,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                     label: const Text(
                       "Share badge",
                       style: TextStyle(
@@ -297,8 +298,7 @@ class BadgeTile extends StatelessWidget {
                     value: badge.fraction,
                     minHeight: 8,
                     backgroundColor: AppTheme.textColor.withValues(alpha: 0.1),
-                    valueColor:
-                        AlwaysStoppedAnimation(AppTheme.primaryBlue),
+                    valueColor: AlwaysStoppedAnimation(AppTheme.primaryBlue),
                   ),
                 ),
               ],
@@ -371,10 +371,7 @@ class BadgeTile extends StatelessWidget {
     );
   }
 
-  Widget _buildFriendsList(
-    BuildContext ctx,
-    Map<String, dynamic> badgeMap,
-  ) {
+  Widget _buildFriendsList(BuildContext ctx, Map<String, dynamic> badgeMap) {
     return StreamBuilder<QuerySnapshot>(
       stream: MovieManager.instance.getFriendsStream(),
       builder: (context, snapshot) {

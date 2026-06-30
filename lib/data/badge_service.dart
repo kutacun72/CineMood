@@ -36,16 +36,37 @@ class BadgeInfo {
 
   /// Sohbette paylasmak icin rozeti basit bir map'e cevirir.
   Map<String, dynamic> toShareMap() => {
-        'badge_id': id,
-        'badge_title': title,
-        'badge_desc': description,
-        'badge_icon': icon.codePoint,
-        'badge_color': color.toARGB32(),
-      };
+    'badge_id': id,
+    'badge_title': title,
+    'badge_desc': description,
+    'badge_icon': icon.codePoint,
+    'badge_color': color.toARGB32(),
+  };
 }
 
 class BadgeService {
   BadgeService._();
+
+  static const List<IconData> _shareableIcons = [
+    Icons.play_circle_fill_rounded,
+    Icons.local_movies_rounded,
+    Icons.theaters_rounded,
+    Icons.emoji_events_rounded,
+    Icons.favorite_rounded,
+    Icons.dark_mode_rounded,
+    Icons.sentiment_very_satisfied_rounded,
+    Icons.local_fire_department_rounded,
+    Icons.favorite_border_rounded,
+    Icons.rocket_launch_rounded,
+  ];
+
+  static IconData sharedIconFrom(Object? storedCodePoint) {
+    final codePoint = (storedCodePoint as num?)?.toInt();
+    for (final icon in _shareableIcons) {
+      if (icon.codePoint == codePoint) return icon;
+    }
+    return Icons.emoji_events_rounded;
+  }
 
   /// Verilen izleme ve favori listelerinden tum rozetleri hesaplar.
   /// Acilan rozetler once gelecek sekilde siralanir.

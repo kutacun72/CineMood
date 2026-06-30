@@ -1,4 +1,4 @@
-// File: lib/views/home_view/movie_detail_view.dart
+// Movie details, lists, ratings, and reviews screen.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,18 +14,15 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:cinemood/models/movie_model.dart';
-import 'package:cinemood/models/person_model.dart';
-
-class MovieDetailView extends StatefulWidget {
+class MovieDetailsView extends StatefulWidget {
   final Movie movie;
-  const MovieDetailView({super.key, required this.movie});
+  const MovieDetailsView({super.key, required this.movie});
 
   @override
-  State<MovieDetailView> createState() => _MovieDetailViewState();
+  State<MovieDetailsView> createState() => _MovieDetailsViewState();
 }
 
-class _MovieDetailViewState extends State<MovieDetailView> {
+class _MovieDetailsViewState extends State<MovieDetailsView> {
   YoutubePlayerController? _controller;
   final bool _isPlayerReady = false;
 
@@ -636,9 +633,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                   IconButton(
                     tooltip: isWatched ? "Watched" : "Mark as watched",
                     icon: Icon(
-                      isWatched
-                          ? Icons.visibility
-                          : Icons.visibility_outlined,
+                      isWatched ? Icons.visibility : Icons.visibility_outlined,
                       color: isWatched ? AppTheme.primaryBlue : Colors.white,
                       size: 28,
                     ),

@@ -35,8 +35,7 @@ class Shimmer extends StatefulWidget {
   State<Shimmer> createState() => _ShimmerState();
 }
 
-class _ShimmerState extends State<Shimmer>
-    with SingleTickerProviderStateMixin {
+class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
@@ -59,10 +58,12 @@ class _ShimmerState extends State<Shimmer>
     if (!widget.enabled) return widget.child;
 
     final isDark = AppTheme.backgroundBlack.computeLuminance() < 0.5;
-    final base = isDark ? Colors.white.withValues(alpha: 0.06)
-                        : Colors.black.withValues(alpha: 0.06);
-    final highlight = isDark ? Colors.white.withValues(alpha: 0.16)
-                            : Colors.black.withValues(alpha: 0.12);
+    final base = isDark
+        ? Colors.white.withValues(alpha: 0.06)
+        : Colors.black.withValues(alpha: 0.06);
+    final highlight = isDark
+        ? Colors.white.withValues(alpha: 0.16)
+        : Colors.black.withValues(alpha: 0.12);
 
     return AnimatedBuilder(
       animation: _controller,
@@ -122,7 +123,9 @@ class _ShimmerBox extends StatelessWidget {
         // taban yeterli.
         color: Colors.white,
         shape: shape,
-        borderRadius: shape == BoxShape.circle ? null : (borderRadius ?? BorderRadius.circular(8)),
+        borderRadius: shape == BoxShape.circle
+            ? null
+            : (borderRadius ?? BorderRadius.circular(8)),
       ),
     );
   }

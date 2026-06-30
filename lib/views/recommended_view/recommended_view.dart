@@ -183,8 +183,9 @@ class _RecommendedViewState extends State<RecommendedView> {
             decoration: BoxDecoration(
               color: AppTheme.surfaceDark,
               borderRadius: BorderRadius.circular(12),
-              border:
-                  Border.all(color: AppTheme.textColor.withValues(alpha: 0.1)),
+              border: Border.all(
+                color: AppTheme.textColor.withValues(alpha: 0.1),
+              ),
             ),
             child: Text(
               "Favorite or watch a few movies to get personal picks.",

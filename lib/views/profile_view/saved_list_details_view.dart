@@ -1,23 +1,21 @@
-// Dosya: lib/views/profile_view/user_list_detail_view.dart
+// Saved list details and sharing screen.
 
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
 import 'package:cinemood/data/movie_manager.dart';
-import 'package:cinemood/models/movie_model.dart';
-import 'package:cinemood/models/person_model.dart';
+import 'package:cinemood/views/profile_view/widgets/saved_list_entry_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserListDetailView extends StatefulWidget {
+class SavedListDetailsView extends StatefulWidget {
   final String listId;
   final String listName;
   final List items;
   final String type;
 
-  const UserListDetailView({
+  const SavedListDetailsView({
     super.key,
     required this.listId,
     required this.listName,
@@ -26,10 +24,10 @@ class UserListDetailView extends StatefulWidget {
   });
 
   @override
-  State<UserListDetailView> createState() => _UserListDetailViewState();
+  State<SavedListDetailsView> createState() => _SavedListDetailsViewState();
 }
 
-class _UserListDetailViewState extends State<UserListDetailView> {
+class _SavedListDetailsViewState extends State<SavedListDetailsView> {
   bool get isDark => MovieManager.instance.isDarkMode;
   Color get dialogBg => isDark ? AppTheme.surfaceDark : Colors.white;
   Color get dialogText => isDark ? Colors.white : Colors.black;
@@ -281,121 +279,24 @@ class _UserListDetailViewState extends State<UserListDetailView> {
                         final item =
                             currentItems[index] as Map<String, dynamic>;
 
-                        String title =
-                            item['title'] ?? item['name'] ?? 'Unknown';
-                        String? image =
-                            item['poster_path'] ?? item['profile_path'];
-                        String? releaseDate = item['release_date'];
-
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          decoration: BoxDecoration(
-                            color: surfaceColor,
-                            borderRadius: BorderRadius.circular(12),
-                            border: isDark
-                                ? Border.all(color: Colors.white10)
-                                : null,
-                            boxShadow: isDark
-                                ? []
-                                : [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(
-                                        alpha: 0.05,
-                                      ),
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                          ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(10),
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: image != null
-                                  ? CachedNetworkImage(
-                                      imageUrl: image,
-                                      width: 50,
-                                      height: 75,
-                                      fit: BoxFit.cover,
-                                      placeholder: (c, u) => Container(
-                                        color: isDark
-                                            ? AppTheme.surfaceDark
-                                            : Colors.grey.shade300,
-                                      ),
-                                      errorWidget: (c, u, e) => Container(
-                                        color: Colors.grey,
-                                        child: const Icon(Icons.error),
-                                      ),
-                                    )
-                                  : Container(
-                                      width: 50,
-                                      height: 75,
-                                      color: Colors.grey,
-                                      child: Icon(
-                                        isPersonList
-                                            ? Icons.person
-                                            : Icons.movie,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                            ),
-                            title: Text(
-                              title,
-                              style: TextStyle(
-                                color: textColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: releaseDate != null
-                                ? Text(
-                                    releaseDate,
-                                    style: TextStyle(
-                                      color: subTextColor,
-                                      fontSize: 12,
-                                    ),
-                                  )
-                                : null,
-                            trailing: IconButton(
-                              icon: const Icon(
-                                Icons.remove_circle_outline,
-                                color: Colors.redAccent,
-                              ),
-                              onPressed: () async {
-                                await MovieManager.instance
-                                    .removeMovieFromCustomList(
-                                      widget.listId,
-                                      item,
-                                    );
-
-                                if (mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        "The item has been deleted.",
-                                      ),
-                                      duration: Duration(seconds: 1),
-                                      backgroundColor: Colors.redAccent,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                            onTap: () {
-                              if (isPersonList) {
-                                context.push(
-                                  '/person-detail',
-                                  extra: Person.fromTMDB(item),
-                                );
-                              } else {
-                                context.push(
-                                  '/movie-detail',
-                                  extra: Movie.fromMap(item),
-                                );
-                              }
-                            },
-                          ),
+                        return SavedListEntryTile(
+                          entry: item,
+                          isPerson: isPersonList,
+                          isDarkMode: isDark,
+                          onRemove: () => _removeEntry(item),
+                          onOpen: () {
+                            if (isPersonList) {
+                              context.push(
+                                '/person-detail',
+                                extra: Person.fromTMDB(item),
+                              );
+                              return;
+                            }
+                            context.push(
+                              '/movie-detail',
+                              extra: Movie.fromMap(item),
+                            );
+                          },
                         );
                       },
                     ),
@@ -403,6 +304,19 @@ class _UserListDetailViewState extends State<UserListDetailView> {
           },
         );
       },
+    );
+  }
+
+  Future<void> _removeEntry(Map<String, dynamic> entry) async {
+    await MovieManager.instance.removeMovieFromCustomList(widget.listId, entry);
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("The item has been deleted."),
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.redAccent,
+      ),
     );
   }
 }

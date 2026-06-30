@@ -37,13 +37,17 @@ class _AnimatedFavoriteButtonState extends State<AnimatedFavoriteButton>
     // 1.0 -> 1.4 -> 1.0 seklinde bir pop egrisi.
     _scale = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.4)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 1.0,
+          end: 1.4,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 40,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.4, end: 1.0)
-            .chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween(
+          begin: 1.4,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
         weight: 60,
       ),
     ]).animate(_controller);
