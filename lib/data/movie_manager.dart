@@ -528,6 +528,64 @@ class MovieManager extends ChangeNotifier {
         .toList();
   }
 
+  // --- AKILLI ONERILER (TMDB recommendations) ---
+  final List<Movie> _smartRecommendations = [];
+  List<Movie> get smartRecommendations => _smartRecommendations;
+  bool _isLoadingRecommendations = false;
+  bool get isLoadingRecommendations => _isLoadingRecommendations;
+
+  /// Kullanicinin favori + izledigi filmlerden yola cikarak TMDB'nin
+  /// "recommendations" verisiyle kisisel oneriler olusturur.
+  Future<void> fetchSmartRecommendations() async {
+    _isLoadingRecommendations = true;
+    notifyListeners();
+
+    if (_genreMap.isEmpty) await fetchGenres();
+
+    // Tohum filmler: once favoriler, sonra izlenenler (en guclu sinyal).
+    final seeds = <Movie>[..._favoriteMovies, ..._watchedMovies];
+    if (seeds.isEmpty) {
+      _smartRecommendations.clear();
+      _isLoadingRecommendations = false;
+      notifyListeners();
+      return;
+    }
+
+    // En fazla 5 tohum film kullan (API cagrisini sinirla).
+    final uniqueSeeds = <int, Movie>{};
+    for (final m in seeds) {
+      uniqueSeeds[m.id] = m;
+    }
+    final seedList = uniqueSeeds.values.take(5).toList();
+
+    // Onerilerden cikartilacaklar: zaten bilinen filmler.
+    final excludeIds = <int>{
+      ..._favoriteMovies.map((m) => m.id),
+      ..._watchedMovies.map((m) => m.id),
+    };
+
+    final Map<int, Movie> scored = {};
+    for (final seed in seedList) {
+      final recs = await _tmdbService.fetchRecommendations(seed.id, _genreMap);
+      for (final rec in recs) {
+        if (excludeIds.contains(rec.id)) continue;
+        // Birden fazla tohumda gecen film daha guclu oneri sayilir;
+        // map'te tutarak tekrarsiz birlestiriyoruz.
+        scored.putIfAbsent(rec.id, () => rec);
+      }
+    }
+
+    final result = scored.values.toList()
+      ..sort((a, b) => b.popularity.compareTo(a.popularity));
+
+    _smartRecommendations
+      ..clear()
+      ..addAll(result.take(20));
+
+    _isLoadingRecommendations = false;
+    notifyListeners();
+  }
+
   Future<void> renameCustomList(String listId, String newName) async =>
       await _socialService.renameList(listId, newName);
 

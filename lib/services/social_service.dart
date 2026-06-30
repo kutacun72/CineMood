@@ -121,6 +121,8 @@ class SocialService {
         "${movie.title} added to favorites.",
         movie.id,
         'favorite',
+        movieTitle: movie.title,
+        posterPath: movie.poster,
       );
     } else {
       await _firestore.collection('users').doc(currentUid).update({
@@ -139,6 +141,8 @@ class SocialService {
         "${movie.title} marked as watched.",
         movie.id,
         'watched',
+        movieTitle: movie.title,
+        posterPath: movie.poster,
       );
     } else {
       await _firestore.collection('users').doc(currentUid).update({
@@ -585,6 +589,9 @@ class SocialService {
       "${movie.title} You commented on the movie.",
       movie.id,
       'review',
+      movieTitle: movie.title,
+      posterPath: movie.poster,
+      rating: rating,
     );
   }
 
@@ -702,12 +709,34 @@ class SocialService {
     }
   }
 
-  Future<void> logUserActivity(String text, int? movieId, String type) async {
+  Future<void> logUserActivity(
+    String text,
+    int? movieId,
+    String type, {
+    String? movieTitle,
+    String? posterPath,
+    double? rating,
+  }) async {
     if (currentUid == null) return;
+
+    // Akista her aktivite icin kullaniciyi tekrar sorgulamamak adina
+    // kullanici bilgisini aktiviteye gomeriz (denormalizasyon).
+    int iconId = 0;
+    try {
+      final userDoc =
+          await _firestore.collection('users').doc(currentUid).get();
+      iconId = userDoc.data()?['profile_icon_id'] ?? 0;
+    } catch (_) {}
+
     await _firestore.collection('user_activities').add({
       'user_id': currentUid,
+      'user_email': currentEmail,
+      'profile_icon_id': iconId,
       'text': text,
       'movie_id': movieId ?? 0,
+      'movie_title': movieTitle,
+      'poster_path': posterPath,
+      'rating': rating,
       'type': type,
       'timestamp': FieldValue.serverTimestamp(),
     });

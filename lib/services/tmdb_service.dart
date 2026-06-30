@@ -215,6 +215,30 @@ class TmdbService {
     return null;
   }
 
+  // Belirli bir filme dayali TMDB onerileri ("Bunu izleyenler sunu da izledi").
+  Future<List<Movie>> fetchRecommendations(
+    int movieId,
+    Map<int, String> genreMap,
+  ) async {
+    try {
+      final res = await http.get(
+        Uri.parse(
+          '$_BASE_URL/movie/$movieId/recommendations?api_key=$_API_KEY',
+        ),
+      );
+      if (res.statusCode == 200) {
+        final data = json.decode(res.body);
+        return (data['results'] as List)
+            .where((json) => json['poster_path'] != null)
+            .map((json) => Movie.fromTMDB(json, genreMap))
+            .toList();
+      }
+    } catch (e) {
+      print("Service Recommendations Error: $e");
+    }
+    return [];
+  }
+
   // 8. Discover
   Future<List<Movie>> discoverMoviesByGenre(
     String genreIds,

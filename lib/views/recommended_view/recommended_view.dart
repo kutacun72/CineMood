@@ -1,9 +1,11 @@
 // Dosya: lib/views/recommended_view/recommended_view.dart
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/theme.dart';
 import 'package:cinemood/app/router.dart';
+import 'package:cinemood/app/widgets/shimmer_loading.dart';
 import 'package:cinemood/data/movie_manager.dart';
 
 class RecommendedView extends StatefulWidget {
@@ -18,6 +20,7 @@ class _RecommendedViewState extends State<RecommendedView> {
   void initState() {
     super.initState();
     MovieManager.instance.fetchAppTopRatedMovies();
+    MovieManager.instance.fetchSmartRecommendations();
   }
 
   @override
@@ -28,6 +31,8 @@ class _RecommendedViewState extends State<RecommendedView> {
         final appTopRated = MovieManager.instance.appTopRatedMovies;
         final recommendedByGenre = MovieManager.instance
             .recommendByFavoriteGenres();
+        final smartRecs = MovieManager.instance.smartRecommendations;
+        final loadingSmart = MovieManager.instance.isLoadingRecommendations;
         final isDark = MovieManager.instance.isDarkMode;
 
         return Scaffold(
@@ -79,6 +84,21 @@ class _RecommendedViewState extends State<RecommendedView> {
                 ),
               ),
 
+              // --- 0. KISIM: AKILLI ?NER?LER (Senin i?in se?ildi) ---
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: _buildSectionTitle(
+                    context,
+                    'Picked For You',
+                    Icons.auto_awesome,
+                  ),
+                ),
+              ),
+              _buildSmartRecsSliver(context, smartRecs, loadingSmart),
+
+              SliverToBoxAdapter(child: const SizedBox(height: 30)),
+
               // --- 1. KISIM: KULLANICI PUANLI F?LMLER ---
               SliverToBoxAdapter(
                 child: Padding(
@@ -123,6 +143,129 @@ class _RecommendedViewState extends State<RecommendedView> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSmartRecsSliver(
+    BuildContext context,
+    List<Movie> movies,
+    bool loading,
+  ) {
+    // Yuklenirken shimmer poster iskeletleri goster.
+    if (loading && movies.isEmpty) {
+      return SliverToBoxAdapter(
+        child: SizedBox(
+          height: 210,
+          child: Shimmer(
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 4,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (_, __) => Shimmer.box(
+                width: 130,
+                height: 195,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (movies.isEmpty) {
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceDark,
+              borderRadius: BorderRadius.circular(12),
+              border:
+                  Border.all(color: AppTheme.textColor.withValues(alpha: 0.1)),
+            ),
+            child: Text(
+              "Favorite or watch a few movies to get personal picks.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: AppTheme.textColor.withValues(alpha: 0.6),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        height: 230,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: movies.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemBuilder: (context, index) {
+            final movie = movies[index];
+            return GestureDetector(
+              onTap: () => context.push('/movie-detail', extra: movie),
+              child: SizedBox(
+                width: 130,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: CachedNetworkImage(
+                        imageUrl: movie.poster,
+                        width: 130,
+                        height: 180,
+                        fit: BoxFit.cover,
+                        placeholder: (c, u) => Container(
+                          width: 130,
+                          height: 180,
+                          color: AppTheme.surfaceDark,
+                        ),
+                        errorWidget: (c, u, e) => Container(
+                          width: 130,
+                          height: 180,
+                          color: Colors.grey,
+                          child: const Icon(Icons.movie, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      movie.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppTheme.textColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber, size: 13),
+                        const SizedBox(width: 2),
+                        Text(
+                          movie.rating.toStringAsFixed(1),
+                          style: TextStyle(
+                            color: AppTheme.textColor.withValues(alpha: 0.6),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 
