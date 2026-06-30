@@ -46,9 +46,9 @@ class _AppViewState extends State<AppView> {
         .where('recipient_id', isEqualTo: user.uid)
         .snapshots()
         .listen((snapshot) {
-          // ?lk snapshot, uygulama a??ld???nda zaten var olan (eski) bildirimleri
-          // ta??r. Bunlar? ekrana d???rm?yoruz; sadece bundan SONRA eklenenleri
-          // canl? bildirim olarak g?steriyoruz.
+          // İlk snapshot, uygulama açıldığında zaten var olan (eski) bildirimleri
+          // taşır. Bunları ekrana düşürmüyoruz; sadece bundan SONRA eklenenleri
+          // canlı bildirim olarak gösteriyoruz.
           if (_isFirstNotificationSnapshot) {
             _isFirstNotificationSnapshot = false;
             return;
@@ -60,7 +60,7 @@ class _AppViewState extends State<AppView> {
             final data = change.doc.data() as Map<String, dynamic>;
             final docId = change.doc.id;
 
-            // Zaten okunmu? bir bildirimi tekrar g?sterme.
+            // Zaten okunmuş bir bildirimi tekrar gösterme.
             if (data['is_read'] == true) continue;
 
             final manager = MovieManager.instance;
@@ -69,7 +69,7 @@ class _AppViewState extends State<AppView> {
             final text = data['text'] ?? data['message'] ?? 'New Notification';
             final type = data['type'] ?? 'general';
 
-            // Halihaz?rda o ki?iyle sohbetteysek, mesaj bildirimini g?sterme.
+            // Halihazırda o kişiyle sohbetteysek, mesaj bildirimini gösterme.
             if (type == 'message') {
               final senderId = data['sender_id'];
               if (senderId != null &&
@@ -106,7 +106,7 @@ class _AppViewState extends State<AppView> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-            color: AppTheme.primaryBlue.withOpacity(0.5), // D?ZELTME
+            color: AppTheme.primaryBlue.withValues(alpha: 0.5),
             width: 1.5,
           ),
         ),
@@ -191,7 +191,7 @@ class _AppViewState extends State<AppView> {
           body: widget.navigationShell,
           bottomNavigationBar: NavigationBar(
             backgroundColor: AppTheme.backgroundBlack,
-            indicatorColor: AppTheme.primaryBlue.withOpacity(0.2), // D?ZELTME
+            indicatorColor: AppTheme.primaryBlue.withValues(alpha: 0.2),
             selectedIndex: widget.navigationShell.currentIndex,
             onDestinationSelected: (index) {
               widget.navigationShell.goBranch(

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // EKLEND?: Bu olmadan hata verir
+import 'package:firebase_auth/firebase_auth.dart'; // EKLENDİ: Bu olmadan hata verir
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
 import 'package:cinemood/data/movie_manager.dart';

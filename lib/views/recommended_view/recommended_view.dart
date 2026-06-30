@@ -44,7 +44,7 @@ class _RecommendedViewState extends State<RecommendedView> {
                 expandedHeight: 120,
                 pinned: true,
                 backgroundColor: AppTheme.backgroundBlack,
-                // GER? TU?U EKLEND?
+                // GERİ TUŞU EKLENDİ
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back, color: AppTheme.textColor),
                   onPressed: () => context.go(AppRouters.home),
@@ -84,7 +84,7 @@ class _RecommendedViewState extends State<RecommendedView> {
                 ),
               ),
 
-              // --- 0. KISIM: AKILLI ?NER?LER (Senin i?in se?ildi) ---
+              // --- 0. KISIM: AKILLI ÖNERİLER (Senin için seçildi) ---
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -99,7 +99,7 @@ class _RecommendedViewState extends State<RecommendedView> {
 
               SliverToBoxAdapter(child: const SizedBox(height: 30)),
 
-              // --- 1. KISIM: KULLANICI PUANLI F?LMLER ---
+              // --- 1. KISIM: KULLANICI PUANLI FİLMLER ---
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -119,7 +119,7 @@ class _RecommendedViewState extends State<RecommendedView> {
 
               SliverToBoxAdapter(child: const SizedBox(height: 30)),
 
-              // --- 2. KISIM: FAVOR? T?R ?NER?LER? ---
+              // --- 2. KISIM: FAVORİ TÜR ÖNERİLERİ ---
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -368,7 +368,7 @@ class _RecommendedViewState extends State<RecommendedView> {
                   ),
                   if (movie.appRating != null && movie.appRating! > 0)
                     Text(
-                      ' ? ? ${movie.appRating!.toStringAsFixed(1)} (App)',
+                      ' • ⭐ ${movie.appRating!.toStringAsFixed(1)} (App)',
                       style: const TextStyle(
                         color: Colors.amber,
                         fontSize: 12,

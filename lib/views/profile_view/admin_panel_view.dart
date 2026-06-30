@@ -183,7 +183,7 @@ class _AdminUsersTab extends StatelessWidget {
                         ),
                         onPressed: () => SocialService.instance
                             .adminToggleBlock(users[index].id, !isBlocked),
-                        child: Text(isBlocked ? "ENGEL? KALDIR" : "BLOKLA"),
+                        child: Text(isBlocked ? "ENGELİ KALDIR" : "BLOKLA"),
                       ),
               ),
             );

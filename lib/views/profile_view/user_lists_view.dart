@@ -275,7 +275,7 @@ class _UserListsViewState extends State<UserListsView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("?ptal"),
+            child: const Text("İptal"),
           ),
           TextButton(
             onPressed: () async {
@@ -377,7 +377,7 @@ class _UserListsViewState extends State<UserListsView> {
                           ? []
                           : [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 5,
                                 offset: const Offset(0, 2),
                               ),
@@ -411,7 +411,7 @@ class _UserListsViewState extends State<UserListsView> {
                         ),
                       ),
                       subtitle: Text(
-                        "${items.length} ??e ? ${type == 'actor' ? 'Actor' : 'Movie'}",
+                        "${items.length} Öğe • ${type == 'actor' ? 'Actor' : 'Movie'}",
                         style: TextStyle(color: subTextColor, fontSize: 13),
                       ),
                       trailing: PopupMenuButton<String>(

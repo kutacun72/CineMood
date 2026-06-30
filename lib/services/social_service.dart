@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cinemood/models/movie_model.dart';
@@ -65,7 +66,7 @@ class SocialService {
 
       await user.reauthenticateWithCredential(credential);
       await user.updatePassword(newPassword);
-      print("The password has been changed successfully.");
+      debugPrint("The password has been changed successfully.");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
         throw 'You have entered your current password incorrectly.';
@@ -175,7 +176,7 @@ class SocialService {
         return doc.data()!;
       }
     } catch (e) {
-      print("Fav Fetch Error: $e");
+      debugPrint("Fav Fetch Error: $e");
     }
     return {};
   }
@@ -316,7 +317,7 @@ class SocialService {
 
     await createNotification(
       requesterUid,
-      "Arkada?l?k iste?ini kabul etti.",
+      "Arkadaşlık isteğini kabul etti.",
       0,
       'friend_request',
     );
@@ -405,7 +406,7 @@ class SocialService {
           .collection('messages')
           .add(msgData);
     } catch (e) {
-      print("Chat Send Error: $e");
+      debugPrint("Chat Send Error: $e");
     }
 
     try {
@@ -421,7 +422,7 @@ class SocialService {
         'movie_id': sharedMovie?.id ?? 0,
       });
     } catch (e) {
-      print("Notif Send Error: $e");
+      debugPrint("Notif Send Error: $e");
     }
   }
 
@@ -478,7 +479,7 @@ class SocialService {
         return doc.data()?['items'] ?? [];
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
     return [];
   }
@@ -705,7 +706,7 @@ class SocialService {
         'timestamp': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print("Notification Error: $e");
+      debugPrint("Notification Error: $e");
     }
   }
 
@@ -833,7 +834,7 @@ class SocialService {
         'is_blocked': blockStatus,
       });
     } catch (e) {
-      print("Block Error: $e");
+      debugPrint("Block Error: $e");
       rethrow;
     }
   }

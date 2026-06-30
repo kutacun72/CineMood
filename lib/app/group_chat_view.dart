@@ -350,13 +350,13 @@ class _GroupChatViewState extends State<GroupChatView> {
                       style: TextStyle(color: AppTheme.textColor),
                     ),
                     onTap: () {
-                      // [D?ZELTME] Yerel fonksiyon ile g?nderiyoruz
+                      // [DÜZELTME] Yerel fonksiyon ile gönderiyoruz
                       _sendListMessage({
                         'id': docs[index].id,
                         'name': data['name'],
                         'count': (data['items'] as List).length,
                         'type': data['type'] ?? 'movies',
-                        'items': data['items'], // ??eri?i eklemeyi unutmuyoruz
+                        'items': data['items'], // İçeriği eklemeyi unutmuyoruz
                       });
                       Navigator.pop(ctx);
                     },
@@ -551,7 +551,7 @@ class _GroupChatViewState extends State<GroupChatView> {
                       if (isAdmin) ...[
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red.withOpacity(0.2),
+                            backgroundColor: Colors.red.withValues(alpha: 0.2),
                             foregroundColor: Colors.red,
                           ),
                           icon: const Icon(Icons.delete_forever),
@@ -598,7 +598,7 @@ class _GroupChatViewState extends State<GroupChatView> {
 
                       const Divider(color: Colors.white24),
                       Text(
-                        "?yeler",
+                        "Üyeler",
                         style: TextStyle(
                           color: AppTheme.primaryBlue,
                           fontWeight: FontWeight.bold,
@@ -638,7 +638,7 @@ class _GroupChatViewState extends State<GroupChatView> {
                               ),
                               trailing: isUserCreator
                                   ? const Text(
-                                      "Y?netici",
+                                      "Yönetici",
                                       style: TextStyle(
                                         color: Colors.green,
                                         fontSize: 12,
@@ -653,7 +653,7 @@ class _GroupChatViewState extends State<GroupChatView> {
                       if (isAdmin && pending.isNotEmpty) ...[
                         const Divider(color: Colors.white24),
                         const Text(
-                          "Bekleyen ?stekler",
+                          "Bekleyen İstekler",
                           style: TextStyle(
                             color: Colors.orange,
                             fontWeight: FontWeight.bold,
@@ -961,7 +961,7 @@ class _GroupChatViewState extends State<GroupChatView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 1. Yan?tla
+              // 1. Yanıtla
               ListTile(
                 leading: const Icon(Icons.reply, color: Colors.blueAccent),
                 title: Text(
@@ -1141,7 +1141,7 @@ class _GroupChatViewState extends State<GroupChatView> {
                         padding: const EdgeInsets.all(5),
                         margin: const EdgeInsets.only(bottom: 5),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           border: const Border(
                             left: BorderSide(color: Colors.orange, width: 3),
                           ),
@@ -1160,7 +1160,7 @@ class _GroupChatViewState extends State<GroupChatView> {
                             Text(
                               replyTo['text'] ?? 'Media',
                               style: TextStyle(
-                                color: textColor.withOpacity(0.7),
+                                color: textColor.withValues(alpha: 0.7),
                                 fontSize: 10,
                               ),
                               maxLines: 1,
@@ -1307,7 +1307,7 @@ class _GroupChatViewState extends State<GroupChatView> {
       child: Row(
         children: [
           CircleAvatar(
-            radius: 24, // ?kon k???lt?ld?
+            radius: 24, // İkon küçültüldü
             backgroundColor: Colors.transparent,
             backgroundImage: NetworkImage(iconUrl),
           ),

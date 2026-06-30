@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
 import 'package:cinemood/data/movie_manager.dart';
-import 'package:cinemood/services/social_service.dart'; // EKLEND?
+import 'package:cinemood/services/social_service.dart'; // EKLENDİ
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -467,7 +467,7 @@ class ProfileView extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
 
-                    // Bildirim Ayar?
+                    // Bildirim Ayarı
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
@@ -531,7 +531,7 @@ class ProfileView extends StatelessWidget {
                       onTap: () => _showChangePasswordDialog(context),
                     ),
 
-                    // --- TEMA DE???T?R BUTONU ---
+                    // --- TEMA DEĞİŞTİR BUTONU ---
                     _buildMenuItem(
                       icon: isDark ? Icons.light_mode : Icons.dark_mode,
                       text: isDark ? "Light Mode" : "Dark Mode",

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:cinemood/data/movie_manager.dart'; // Manager'a eri?im
+import 'package:cinemood/data/movie_manager.dart'; // Manager'a erişim
 
 const String _API_KEY = "cea49e6756dd9655a98066426a1b934d";
 const String _IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
@@ -57,7 +57,7 @@ class GenreService extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print("Genre Poster Error: $e");
+      debugPrint("Genre Poster Error: $e");
     }
   }
 
@@ -110,7 +110,7 @@ class GenreService extends ChangeNotifier {
         state.hasMorePages = false;
       }
     } catch (e) {
-      print('Genre connection error: $e');
+      debugPrint('Genre connection error: $e');
     } finally {
       state.isFetching = false;
       notifyListeners();

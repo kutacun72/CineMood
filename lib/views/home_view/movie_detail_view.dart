@@ -2,7 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show debugPrint, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
@@ -40,8 +40,8 @@ class _MovieDetailViewState extends State<MovieDetailView> {
 
     MovieManager.instance.fetchTrailerId(widget.movie).then((_) {
       if (mounted && _hasTrailer) {
-        // Web'de youtube_player_flutter controller'? kullan?lmaz; web trailer
-        // ayr? bir widget (WebTrailerPlayer) ile g?sterilir.
+        // Web'de youtube_player_flutter controller'ı kullanılmaz; web trailer
+        // ayrı bir widget (WebTrailerPlayer) ile gösterilir.
         if (!kIsWeb) {
           _controller = YoutubePlayerController(
             initialVideoId: widget.movie.trailerId,
@@ -66,7 +66,9 @@ class _MovieDetailViewState extends State<MovieDetailView> {
   void dispose() {
     try {
       _controller?.dispose();
-    } catch (e) {}
+    } catch (e) {
+      debugPrint("Trailer initialization error: $e");
+    }
     super.dispose();
   }
 
@@ -392,7 +394,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                               },
                             ),
 
-                            // 2. SEKME: GRUPLAR (F?LTREL?)
+                            // 2. SEKME: GRUPLAR (FİLTRELİ)
                             StreamBuilder<QuerySnapshot>(
                               stream: MovieManager.instance.getGroupsStream(),
                               builder: (context, snapshot) {
@@ -590,15 +592,15 @@ class _MovieDetailViewState extends State<MovieDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    // Web'de mobil YouTube paketi (YoutubePlayerBuilder) kullan?lamaz.
-    // Web trailer'? g?vdede WebTrailerPlayer ile ?izilir.
+    // Web'de mobil YouTube paketi (YoutubePlayerBuilder) kullanılamaz.
+    // Web trailer'ı gövdede WebTrailerPlayer ile çizilir.
     if (kIsWeb) {
       return _buildScaffold(context, null);
     }
 
-    // Mobil: trailer haz?rsa, tam ekran modunun d?zg?n ?al??mas? i?in t?m
-    // sayfay? YoutubePlayerBuilder ile sarmal?yoruz. Builder, fullscreen'e
-    // ge?ildi?inde player'? sayfan?n k?k?ne ta??y?p t?m ekrana kaplat?r.
+    // Mobil: trailer hazırsa, tam ekran modunun düzgün çalışması için tüm
+    // sayfayı YoutubePlayerBuilder ile sarmalıyoruz. Builder, fullscreen'e
+    // geçildiğinde player'ı sayfanın köküne taşıyıp tüm ekrana kaplatır.
     if (_controller != null) {
       return YoutubePlayerBuilder(
         player: YoutubePlayer(
@@ -706,7 +708,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              AppTheme.backgroundBlack.withOpacity(0.9),
+                              AppTheme.backgroundBlack.withValues(alpha: 0.9),
                             ],
                           ),
                         ),
@@ -727,7 +729,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.textColor, // D?NAM?K RENK
+                          color: AppTheme.textColor, // DİNAMİK RENK
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -910,7 +912,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                                       data['user_id'],
                                     )) {
                                       friendRatings.add(
-                                        "${data['user_name'] ?? 'Arkada?'} ${(data['rating'] as num).toStringAsFixed(1)} verdi",
+                                        "${data['user_name'] ?? 'Arkadaş'} ${(data['rating'] as num).toStringAsFixed(1)} verdi",
                                       );
                                     }
                                   }
@@ -1218,7 +1220,7 @@ class _ReviewCardState extends State<ReviewCard> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("?ptal"),
+            child: const Text("İptal"),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -1342,12 +1344,16 @@ class _ReviewCardState extends State<ReviewCard> {
                                   ? [
                                       Shadow(
                                         blurRadius: 10.0,
-                                        color: Colors.amber.withOpacity(0.8),
+                                        color: Colors.amber.withValues(
+                                          alpha: 0.8,
+                                        ),
                                         offset: const Offset(0, 0),
                                       ),
                                       Shadow(
                                         blurRadius: 20.0,
-                                        color: Colors.orange.withOpacity(0.5),
+                                        color: Colors.orange.withValues(
+                                          alpha: 0.5,
+                                        ),
                                         offset: const Offset(0, 0),
                                       ),
                                     ]

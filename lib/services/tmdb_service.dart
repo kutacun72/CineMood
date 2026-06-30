@@ -1,6 +1,7 @@
 // Dosya: lib/services/tmdb_service.dart
 
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:cinemood/models/movie_model.dart';
 import 'package:cinemood/models/person_model.dart';
@@ -22,7 +23,7 @@ class TmdbService {
         return {for (var g in data['genres']) g['id']: g['name']};
       }
     } catch (e) {
-      print("Service Genre Error: $e");
+      debugPrint("Service Genre Error: $e");
     }
     return {};
   }
@@ -43,7 +44,7 @@ class TmdbService {
         return {'movies': movies, 'totalPages': data['total_pages'] ?? 1};
       }
     } catch (e) {
-      print("Service Popular Error: $e");
+      debugPrint("Service Popular Error: $e");
     }
     return {'movies': <Movie>[], 'totalPages': 0};
   }
@@ -72,7 +73,7 @@ class TmdbService {
         }
       }
     } catch (e) {
-      print("Service Search Error: $e");
+      debugPrint("Service Search Error: $e");
     }
 
     return {'movies': movies, 'people': people};
@@ -92,7 +93,7 @@ class TmdbService {
             .toList();
       }
     } catch (e) {
-      print("Service Person Search Error: $e");
+      debugPrint("Service Person Search Error: $e");
     }
     return [];
   }
@@ -112,7 +113,7 @@ class TmdbService {
         person.placeOfBirth = data['place_of_birth'] ?? "";
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
 
     // Filmografi
@@ -144,7 +145,7 @@ class TmdbService {
         person.filmography = movies;
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -183,7 +184,7 @@ class TmdbService {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
 
     try {
@@ -199,7 +200,7 @@ class TmdbService {
         movie.trailerId = trailer != null ? trailer['key'] : 'dQw4w9WgXcQ';
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -211,7 +212,9 @@ class TmdbService {
       if (res.statusCode == 200) {
         return Movie.fromTMDB(json.decode(res.body), genreMap);
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint("Service Movie Detail Error: $e");
+    }
     return null;
   }
 
@@ -234,7 +237,7 @@ class TmdbService {
             .toList();
       }
     } catch (e) {
-      print("Service Recommendations Error: $e");
+      debugPrint("Service Recommendations Error: $e");
     }
     return [];
   }
@@ -254,7 +257,9 @@ class TmdbService {
             .map((json) => Movie.fromTMDB(json, genreMap))
             .toList();
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint("Service Discover Error: $e");
+    }
     return [];
   }
 }

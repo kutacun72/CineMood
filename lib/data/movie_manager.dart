@@ -79,7 +79,7 @@ class MovieManager extends ChangeNotifier {
         }
       }
     } catch (e) {
-      debugPrint("Tema y?klenirken hata: $e");
+      debugPrint("Tema yüklenirken hata: $e");
     }
   }
 
@@ -670,7 +670,7 @@ class MovieManager extends ChangeNotifier {
       data['list_name'] = sharedList['name'];
       data['list_count'] = sharedList['count'];
       data['list_type'] = sharedList['type'];
-      // List i?eri?ini kaydet (?nemli fix)
+      // List içeriğini kaydet (Önemli fix)
       if (sharedList.containsKey('items')) {
         data['list_items'] = sharedList['items'];
       }
@@ -699,13 +699,13 @@ class MovieManager extends ChangeNotifier {
 
         await _socialService.createNotification(
           memberId,
-          "Grup mesaj? ($groupName): ${text.isEmpty ? 'Bir i?erik payla??ld?' : text}",
+          "Grup mesajı ($groupName): ${text.isEmpty ? 'Bir içerik paylaşıldı' : text}",
           sharedMovie != null ? sharedMovie['id'] : 0,
           'message',
         );
       }
     } catch (e) {
-      print("Grup bildirim hatas?: $e");
+      debugPrint("Grup bildirim hatası: $e");
     }
   }
 

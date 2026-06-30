@@ -97,7 +97,7 @@ class _NotificationsViewState extends State<NotificationsView>
   }
 }
 
-// --- 1. B?LD?R?MLER SEKMES? ---
+// --- 1. BİLDİRİMLER SEKMESİ ---
 class NotificationListTab extends StatefulWidget {
   const NotificationListTab({super.key});
 
@@ -352,7 +352,7 @@ void _navigateBasedOnType(BuildContext context, Map<String, dynamic> data) {
 void _goToMovie(BuildContext context, int movieId) async {
   ScaffoldMessenger.of(context).showSnackBar(
     const SnackBar(
-      content: Text("Film a??l?yor..."),
+      content: Text("Film açılıyor..."),
       duration: Duration(seconds: 1),
     ),
   );

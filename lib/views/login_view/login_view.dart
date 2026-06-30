@@ -100,7 +100,7 @@ class _LoginViewState extends State<LoginView> {
         if (userDocSnapshot.exists &&
             userDocSnapshot.data()?['is_blocked'] == true) {
           await FirebaseAuth.instance.signOut();
-          _showErrorDialog("Hesab?n?z k?t? kullan?m sebebiyle blockland?.");
+          _showErrorDialog("Hesabınız kötü kullanım sebebiyle blocklandı.");
           return;
         }
 
@@ -173,7 +173,7 @@ class _LoginViewState extends State<LoginView> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.black.withOpacity(0.8),
+        backgroundColor: Colors.black.withValues(alpha: 0.8),
         title: const Text('Error', style: TextStyle(color: Colors.red)),
         content: Text(message, style: const TextStyle(color: Colors.white)),
         actions: <Widget>[
@@ -200,7 +200,7 @@ class _LoginViewState extends State<LoginView> {
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-              child: Container(color: Colors.black.withOpacity(0.6)),
+              child: Container(color: Colors.black.withValues(alpha: 0.6)),
             ),
           ),
 
@@ -265,10 +265,10 @@ class _LoginViewState extends State<LoginView> {
                     decoration: InputDecoration(
                       hintText: 'Email',
                       hintStyle: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.1),
+                      fillColor: Colors.white.withValues(alpha: 0.1),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                         borderSide: BorderSide.none,
@@ -287,10 +287,10 @@ class _LoginViewState extends State<LoginView> {
                     decoration: InputDecoration(
                       hintText: 'Password',
                       hintStyle: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.1),
+                      fillColor: Colors.white.withValues(alpha: 0.1),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                         borderSide: BorderSide.none,
@@ -314,7 +314,9 @@ class _LoginViewState extends State<LoginView> {
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.primaryBlue.withOpacity(0.4),
+                                color: AppTheme.primaryBlue.withValues(
+                                  alpha: 0.4,
+                                ),
                                 blurRadius: 10,
                                 offset: const Offset(0, 5),
                               ),

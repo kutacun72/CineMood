@@ -58,11 +58,11 @@ class _PersonDetailViewState extends State<PersonDetailView> {
         backgroundColor: AppTheme.surfaceDark,
         title: Text(
           "New Contact List",
-          style: TextStyle(color: AppTheme.textColor), // Mavi/Beyaz Yaz?
+          style: TextStyle(color: AppTheme.textColor), // Mavi/Beyaz Yazı
         ),
         content: TextField(
           controller: nameController,
-          style: TextStyle(color: AppTheme.textColor), // Mavi/Beyaz Yaz?
+          style: TextStyle(color: AppTheme.textColor), // Mavi/Beyaz Yazı
           decoration: InputDecoration(
             hintText: "List Name...",
             hintStyle: TextStyle(
@@ -75,7 +75,7 @@ class _PersonDetailViewState extends State<PersonDetailView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("?ptal"),
+            child: const Text("İptal"),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -83,7 +83,7 @@ class _PersonDetailViewState extends State<PersonDetailView> {
             ),
             onPressed: () async {
               if (nameController.text.trim().isNotEmpty) {
-                // 'actor' t?r?nde liste olu?tur
+                // 'actor' türünde liste oluştur
                 await MovieManager.instance.createCustomList(
                   nameController.text.trim(),
                   'actor',
@@ -91,7 +91,7 @@ class _PersonDetailViewState extends State<PersonDetailView> {
                 if (mounted) {
                   Navigator.pop(ctx);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Liste olu?turuldu!")),
+                    const SnackBar(content: Text("Liste oluşturuldu!")),
                   );
                 }
               }
@@ -190,7 +190,7 @@ class _PersonDetailViewState extends State<PersonDetailView> {
                             style: TextStyle(color: AppTheme.textColor),
                           ),
                           subtitle: Text(
-                            "${items.length} ki?i",
+                            "${items.length} kişi",
                             style: TextStyle(
                               color: AppTheme.textColor.withValues(alpha: 0.6),
                             ),

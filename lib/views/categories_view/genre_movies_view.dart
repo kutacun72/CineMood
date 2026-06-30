@@ -69,7 +69,7 @@ class _GenreMoviesViewState extends State<GenreMoviesView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("?ptal"),
+            child: const Text("İptal"),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -191,7 +191,7 @@ class _GenreMoviesViewState extends State<GenreMoviesView> {
                         return ListTile(
                           leading: Icon(Icons.list, color: AppTheme.iconColor),
                           title: Text(
-                            listData['name'] ?? '?simsiz',
+                            listData['name'] ?? 'İsimsiz',
                             style: TextStyle(color: AppTheme.textColor),
                           ),
                           subtitle: Text(

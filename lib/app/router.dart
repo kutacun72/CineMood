@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// View Importlar?
+// View Importları
 import 'package:cinemood/views/app_view.dart';
 import 'package:cinemood/views/login_view/login_view.dart';
 import 'package:cinemood/views/login_view/welcome_screen.dart';
@@ -14,7 +14,7 @@ import 'package:cinemood/views/categories_view/genre_movies_view.dart';
 import 'package:cinemood/views/favorites_view/favorites_view.dart';
 import 'package:cinemood/views/recommended_view/recommended_view.dart';
 
-// Detay Sayfalar?
+// Detay Sayfaları
 import 'package:cinemood/views/home_view/movie_detail_view.dart';
 import 'package:cinemood/views/home_view/personal_detail_view.dart';
 
@@ -77,7 +77,7 @@ final router = GoRouter(
     GoRoute(
       path: AppRouters.welcome,
       builder: (context, state) {
-        final name = state.extra as String? ?? 'Kullan?c?';
+        final name = state.extra as String? ?? 'Kullanıcı';
         return WelcomeScreen(userName: name);
       },
     ),
@@ -100,7 +100,7 @@ final router = GoRouter(
       builder: (context, state) {
         if (state.extra is! Person) {
           return const Scaffold(
-            body: Center(child: Text("Hata: Ki?i verisi yok")),
+            body: Center(child: Text("Hata: Kişi verisi yok")),
           );
         }
         return PersonDetailView(person: state.extra as Person);

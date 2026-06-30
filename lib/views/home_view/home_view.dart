@@ -387,7 +387,7 @@ class _HomeViewState extends State<HomeView> {
                 ],
               ),
 
-              // 2. ARAMA ?UBU?U
+              // 2. ARAMA ÇUBUĞU
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
@@ -661,7 +661,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
 
-                // POPULAR LIST ? ilk yuklemede iskelet, sonra gercek liste
+                // POPULAR LIST — ilk yuklemede iskelet, sonra gercek liste
                 if (manager.allMovies.isEmpty && manager.isFetching)
                   SliverList(
                     delegate: SliverChildBuilderDelegate(

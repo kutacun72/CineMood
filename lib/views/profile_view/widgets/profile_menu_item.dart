@@ -22,7 +22,7 @@ class ProfileMenuItem extends StatelessWidget {
     final itemColor = color ?? AppTheme.primaryBlue;
 
     final bgColor = color == Colors.redAccent
-        ? Colors.redAccent.withOpacity(0.1)
+        ? Colors.redAccent.withValues(alpha: 0.1)
         : AppTheme.surfaceDark;
 
     return Card(

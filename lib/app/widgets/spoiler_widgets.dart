@@ -1,6 +1,6 @@
 // Dosya: lib/app/widgets/spoiler_widgets.dart
 //
-// Spoiler (s?rpriz bozan) icerikleri isaretlemek ve gostermek icin ortak
+// Spoiler (sürpriz bozan) icerikleri isaretlemek ve gostermek icin ortak
 // widget'lar. Tum yorum ve mesajlasma ekranlarinda tutarli sekilde kullanilir.
 //
 //  - [SpoilerToggle]  : Yazi yazarken "Spoiler iceriyor" anahtari.
@@ -69,7 +69,7 @@ class SpoilerToggle extends StatelessWidget {
 }
 
 /// Spoiler isaretli bir metni gosterir. Baslangicta metin bulaniklastirilir
-/// ve "Spoiler ? gostermek icin dokun" uyarisi gosterilir. Kullanici dokununca
+/// ve "Spoiler — gostermek icin dokun" uyarisi gosterilir. Kullanici dokununca
 /// metin acilir. [isSpoiler] false ise metin oldugu gibi gosterilir.
 class SpoilerText extends StatefulWidget {
   final String text;
@@ -141,7 +141,7 @@ class _SpoilerTextState extends State<SpoilerText> {
                   const SizedBox(width: 6),
                   Flexible(
                     child: Text(
-                      "Spoiler ? tap to reveal",
+                      "Spoiler — tap to reveal",
                       style: TextStyle(
                         color: AppTheme.accentPink,
                         fontSize: 12,

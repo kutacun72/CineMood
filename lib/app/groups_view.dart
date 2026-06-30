@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/router.dart';
 import 'package:cinemood/app/theme.dart';
 import 'package:cinemood/data/movie_manager.dart';
-import 'package:cinemood/services/social_service.dart'; // [EKLEND?]
+import 'package:cinemood/services/social_service.dart'; // [EKLENDİ]
 
 class GroupsView extends StatefulWidget {
   const GroupsView({super.key});
@@ -150,7 +150,7 @@ class _GroupsViewState extends State<GroupsView> {
                   }
                 },
                 child: const Text(
-                  "Olu?tur",
+                  "Oluştur",
                   style: TextStyle(color: Colors.white),
                 ),
               ),

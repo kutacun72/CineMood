@@ -276,7 +276,7 @@ class _ChatViewState extends State<ChatView> {
               .doc(targetUid)
               .snapshots(),
           builder: (context, snapshot) {
-            String displayName = "Kullan?c?";
+            String displayName = "Kullanıcı";
             String? iconUrl;
             if (snapshot.hasData && snapshot.data!.exists) {
               final data = snapshot.data!.data() as Map<String, dynamic>;
@@ -357,7 +357,7 @@ class _ChatViewState extends State<ChatView> {
                   if (_replyToMessage != null)
                     Expanded(
                       child: Text(
-                        "Yan?t: ${_replyToMessage!['text']}",
+                        "Yanıt: ${_replyToMessage!['text']}",
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -502,7 +502,7 @@ class _ChatViewState extends State<ChatView> {
                   padding: const EdgeInsets.all(5),
                   margin: const EdgeInsets.only(bottom: 5),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.1), // Hafif karartma
+                    color: Colors.black.withValues(alpha: 0.1),
                     border: const Border(
                       left: BorderSide(color: Colors.orange, width: 3),
                     ),
@@ -510,7 +510,7 @@ class _ChatViewState extends State<ChatView> {
                   child: Text(
                     replyTo['text'] ?? '',
                     style: TextStyle(
-                      color: textColor.withOpacity(0.7), // Yaz? rengine uyumlu
+                      color: textColor.withValues(alpha: 0.7),
                       fontSize: 10,
                     ),
                     maxLines: 1,
@@ -570,7 +570,7 @@ class _ChatViewState extends State<ChatView> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Bu eski bir payla??m, g?r?nt?lenemiyor."),
+              content: Text("Bu eski bir paylaşım, görüntülenemiyor."),
             ),
           );
         }
@@ -600,8 +600,11 @@ class _ChatViewState extends State<ChatView> {
               ],
             ),
             Text(
-              "${msg['list_count'] ?? 0} ??e",
-              style: TextStyle(color: textColor.withOpacity(0.7), fontSize: 12),
+              "${msg['list_count'] ?? 0} Öğe",
+              style: TextStyle(
+                color: textColor.withValues(alpha: 0.7),
+                fontSize: 12,
+              ),
             ),
             if (!isMe && !isFavorites) ...[
               const SizedBox(height: 5),
@@ -697,7 +700,7 @@ class _ChatViewState extends State<ChatView> {
         child: Column(
           children: [
             CircleAvatar(
-              backgroundColor: c.withOpacity(0.2),
+              backgroundColor: c.withValues(alpha: 0.2),
               child: Icon(i, color: c),
             ),
             Text(l, style: TextStyle(color: AppTheme.textColor)),
@@ -707,7 +710,7 @@ class _ChatViewState extends State<ChatView> {
   void _showMovieSearchDialog() {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text("Yak?nda eklenecek")));
+    ).showSnackBar(const SnackBar(content: Text("Yakında eklenecek")));
   }
 
   void _showMyListsDialog() {
@@ -715,7 +718,7 @@ class _ChatViewState extends State<ChatView> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceDark,
-        title: Text("Liste Se?", style: TextStyle(color: AppTheme.textColor)),
+        title: Text("Liste Seç", style: TextStyle(color: AppTheme.textColor)),
         content: SizedBox(
           width: double.maxFinite,
           height: 300,
@@ -775,7 +778,7 @@ class SharedListDisplayView extends StatelessWidget {
       ),
       body: items.isEmpty
           ? const Center(
-              child: Text("Liste bo?", style: TextStyle(color: Colors.grey)),
+              child: Text("Liste boş", style: TextStyle(color: Colors.grey)),
             )
           : ListView.builder(
               itemCount: items.length,

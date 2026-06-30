@@ -10,8 +10,6 @@ import 'package:cinemood/app/theme.dart';
 import 'package:cinemood/app/widgets/empty_state.dart';
 import 'package:cinemood/app/widgets/shimmer_loading.dart';
 import 'package:cinemood/data/movie_manager.dart';
-import 'package:cinemood/models/movie_model.dart';
-import 'package:cinemood/models/person_model.dart';
 
 class FavoritesView extends StatefulWidget {
   const FavoritesView({super.key});
@@ -147,7 +145,7 @@ class _FavoritesViewState extends State<FavoritesView>
               }
             },
             child: const Text(
-              "Olu?tur ve Ekle",
+              "Oluştur ve Ekle",
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -188,7 +186,7 @@ class _FavoritesViewState extends State<FavoritesView>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${itemsToAdd.length} ??eyi listeye ekle",
+                "${itemsToAdd.length} öğeyi listeye ekle",
                 style: TextStyle(
                   color: AppTheme.textColor,
                   fontSize: 18,
