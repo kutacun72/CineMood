@@ -9,7 +9,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cinemood/app/theme.dart';
+import 'package:cinemood/app/widgets/badge_widget.dart';
 import 'package:cinemood/app/widgets/empty_state.dart';
+import 'package:cinemood/data/badge_service.dart';
 import 'package:cinemood/data/movie_manager.dart';
 
 class WatchStatsView extends StatelessWidget {
@@ -105,6 +107,10 @@ class WatchStatsView extends StatelessWidget {
           const SizedBox(height: 28),
         ],
 
+        // --- ROZETLER ---
+        _buildBadges(watched),
+        const SizedBox(height: 28),
+
         _sectionTitle("Highest rated"),
         const SizedBox(height: 14),
         SizedBox(
@@ -167,6 +173,51 @@ class WatchStatsView extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       );
+
+  Widget _buildBadges(List<Movie> watched) {
+    final badges = BadgeService.computeBadges(
+      watched: watched,
+      favorites: MovieManager.instance.favoriteMovies,
+    );
+    final unlockedCount = badges.where((b) => b.unlocked).length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _sectionTitle("Badges"),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryBlue.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                "$unlockedCount / ${badges.length}",
+                style: TextStyle(
+                  color: AppTheme.primaryBlue,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        SizedBox(
+          height: 110,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: badges.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 16),
+            itemBuilder: (context, index) => BadgeTile(badge: badges[index]),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _summaryCard({
     required IconData icon,
